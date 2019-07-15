@@ -1,0 +1,11 @@
+framework module SCTE35_SwiftLibrary {
+  umbrella header "SCTE35_SwiftLibrary.h"
+
+  export *
+  module * { export * }
+}
+
+module SCTE35_SwiftLibrary.Swift {
+    header "SCTE35_SwiftLibrary-Swift.h"
+    requires objc
+}
