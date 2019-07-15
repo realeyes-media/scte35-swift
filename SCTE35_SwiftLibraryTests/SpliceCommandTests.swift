@@ -11,8 +11,6 @@ import XCTest
 
 class SpliceCommandTests: XCTestCase {
 
-    let spliceScheduleCue = "Error 404 - Not found :("
-
     let spliceInsertCue = "/DAvAAAAAAAAAP///wViAAWKf+//CXVCAv4AUmXAAzUAAAAKAAhDVUVJADgyMWLvc/g="
     let secondSpliceInsertCue = "/DAvAAAAAAAA///wFAVIAACPf+/+c2nALv4AUsz1AAAAAAAKAAhDVUVJAAABNWLbowo="
     let invalidInsertCue = "/DAvAAAAAAAAAP///wViAAWKf+9/CXVCAv4AUmXAAzUAAAAKAAhDVUVJADgyMWLvc/g="

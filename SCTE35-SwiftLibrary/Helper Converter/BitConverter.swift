@@ -99,6 +99,7 @@ class BitConverter {
             let intValue = BitConverter.integer(fromBits: nibble)
             let char = String(format: "%01X", intValue)
             stringToReturn.append(char)
+            // TODO: - use page 9 of SCTE Documentation [ISO 15706-2] to find check characters
             if indicesForDash.contains(index) {
                 stringToReturn.append("-")
             } else if index == 15 {
@@ -128,6 +129,7 @@ class BitConverter {
                 stringToReturn.append("-")
             }
         }
+        // TODO: - use page 9 of SCTE Documentation [EIDR ID FORMAT] to find check character
         return stringToReturn + "-?"
     }
 

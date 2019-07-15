@@ -11,7 +11,7 @@ import Foundation
 public struct SCTE35Converter {
     private let minimumBitsInSpliceInfoSection = 200
 
-    /// TODO: - Description of function
+    /// Example of a valid base64String: /DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAAA3//AAApPWwDDEFCQ0QwMTIzNDU2SBAAAGgCL9A=
     /// - Throws: An error of type `SCTE35ParsingError`
     public func parseFrom(base64String: String) throws -> SpliceInfoSection {
         guard let data = Data(base64Encoded: base64String) else {
@@ -86,7 +86,8 @@ public struct SCTE35Converter {
         return SpliceInfoSection(tableID: 252, isSectionSyntaxIndicatorOn: isSectionSyntaxIndicatorOn, isPrivateIndicatorOn: isPrivateIndicatorOn, sectionLength: remainingSectionLength, protocolVersion: protocolVersion, hasEncryptedPacket: isEncryptedPacketOn, encryptionAlgorithm: encryptionAlgorithm, ptsAdjustment: ptsAdjustment, cwIndex: cwIndex, tier: tier, spliceCommandLength: spliceCommandLengthInBytes, spliceCommandType: spliceCommandType, spliceCommand: spliceCommand, descriptorLoopLength: descriptorInfo.descriptorLoopLength, spliceDescriptors: spliceDescriptors, crc32: crcStrings.crc32, ecrc32: crcStrings.ecrc32)
     }
 
-    /// TODO: - Description of function
+    /// Example of a valid hexString: 0xFC3048000000000000FFFFF00506FE932E380B00320217435545494800000A7F9F0808000000002CA0A1E3180000021743554549480000097F9F0808000000002CA0A18A110000B4217EB0
+    /// - Throws: An error of type `SCTE35ParsingError`
     public func parseFrom(hexString: String) throws -> SpliceInfoSection {
         guard let base64String = BitConverter.convertToBase64String(hexString: hexString) else {
             throw SCTE35ParsingError.invalidHexString

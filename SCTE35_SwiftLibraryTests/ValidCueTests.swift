@@ -268,8 +268,6 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
-            // Examples online are few and wildly inconsistent
             XCTAssertEqual(upidInfo.string, "MV0004146400")
             XCTAssertNil(upidInfo.array)
 
@@ -346,8 +344,6 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
-            // Examples online are few and wildly inconsistent
             XCTAssertEqual(upidInfo.string, "0x2CA0A1E3")
             XCTAssertNil(upidInfo.array)
 
@@ -393,8 +389,6 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
-            // Examples online are few and wildly inconsistent
             XCTAssertEqual(upidInfo.string, "0x2CA0A18A")
             XCTAssertNil(upidInfo.array)
 
