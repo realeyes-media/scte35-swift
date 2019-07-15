@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'SCTE35'
-s.version          = '1.0.0'
+s.version          = '1.0.1'
 s.summary          = 'SCTE Library for Swift.'
 s.description      = 'Converts hex strings and base64 strings into SCTE 35 Objects per the specifications at https://www.scte.org/SCTEDocs/Standards/SCTE%2035%202016.pdf'
 s.homepage         = 'https://github.com/realeyes-media/ios-vast-client'
@@ -18,6 +18,6 @@ s.tvos.deployment_target = '10.0'
 s.swift_version = '5.0'
 s.requires_arc = true
 
-s.source_files  = "SCTE35-SwiftLibrary", "SCTE35-SwiftLibrary/**/*.{h,m, swift}"
+s.source_files  = ["SCTE35-SwiftLibrary", "SCTE35-SwiftLibrary/**/*.{h,m, swift}"]
 
 end
