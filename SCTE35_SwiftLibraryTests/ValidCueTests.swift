@@ -723,4 +723,78 @@ class ValidCueTests: XCTestCase {
         XCTAssertEqual(spliceAvail.crc32, "0x62EF73F8")
         XCTAssertNil(spliceAvail.ecrc32)
     }
+
+    let validTimeSigPlacOppStart = "0xFC3034000000000000FFFFF00506FE72BD0050001E021C435545494800008E7FCF0001A599B00808000000002CA0A18A3402009AC9D17E"
+    func testValidTimeSigPlacOppStart() {
+        let spliceAvail = try! converter.parseFrom(hexString: validTimeSigPlacOppStart)
+        XCTAssertEqual(spliceAvail.tableID, 252)
+        XCTAssertEqual(spliceAvail.isSectionSyntaxIndicatorOn, false)
+        XCTAssertEqual(spliceAvail.isPrivateIndicatorOn, false)
+        XCTAssertEqual(spliceAvail.sectionLength, 52)
+        XCTAssertEqual(spliceAvail.protocolVersion, 0)
+        XCTAssertEqual(spliceAvail.hasEncryptedPacket, false)
+        XCTAssertEqual(spliceAvail.encryptionAlgorithm, .noAlgorithm)
+        XCTAssertEqual(spliceAvail.ptsAdjustment, 0)
+        XCTAssertEqual(spliceAvail.tier.hexRepresentation, "0xFFF")
+
+        XCTAssertEqual(spliceAvail.spliceCommandLength, 0x5)
+        XCTAssertEqual(spliceAvail.spliceCommandType, 6)
+        switch spliceAvail.spliceCommand {
+        case .timeSignal(spliceTime: let timeSignal):
+            XCTAssertEqual(timeSignal.isTimeSpecified, true)
+            XCTAssertEqual(timeSignal.ptsTime, 1924989008)
+        default:
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(spliceAvail.descriptorLoopLength, 30)
+        XCTAssertEqual(spliceAvail.spliceDescriptors.count, 1)
+        switch spliceAvail.spliceDescriptors.first! {
+        case .segmentation(info: let info):
+            guard let additionalInfo = info.additionalInfo else {
+                XCTAssert(false)
+                return
+            }
+            XCTAssertEqual(info.tag, 2)
+            XCTAssertEqual(info.length, 28)
+            XCTAssertEqual(info.identifier, 1129661769)
+            XCTAssertEqual(info.eventID, 1207959694)
+            XCTAssertEqual(additionalInfo.isProgramSegmentedMode, true)
+            XCTAssertEqual(additionalInfo.hasSegmentationDuration, true)
+
+            guard let restrictions = additionalInfo.restrictions else {
+                XCTAssert(false)
+                return
+            }
+            XCTAssertEqual(restrictions.isWebDeliveryAllowed, false)
+            XCTAssertEqual(restrictions.isNotRegionallyBlackedOut, true)
+            XCTAssertEqual(restrictions.isArchiveAllowed, true)
+            XCTAssertEqual(restrictions.deviceRestrictions, DeviceRestrictions.noRestrictions)
+            XCTAssertNil(additionalInfo.pidComponents)
+
+            XCTAssertEqual(additionalInfo.segmentationDuration, 27630000)
+            XCTAssertEqual(additionalInfo.segmentationUPID.type, 8)
+            XCTAssertEqual(additionalInfo.segmentationUPID.name, "TI")
+            XCTAssertEqual(additionalInfo.segmentationUPID.description, "AiringID (Formerly Turner ID), used to indicate a specific airing of a program that is unique within a network.")
+
+            guard let upidInfo = additionalInfo.segmentationUPID.info else {
+                XCTAssert(false)
+                return
+            }
+
+            XCTAssertEqual(upidInfo.string, "0x2CA0A18A")
+            XCTAssertNil(upidInfo.array)
+
+            XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
+            XCTAssertEqual(additionalInfo.segmentNumber, 2)
+            XCTAssertEqual(additionalInfo.segmentsExpected, 0)
+
+        default:
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(spliceAvail.crc32, "0x9AC9D17E")
+        XCTAssertNil(spliceAvail.ecrc32)
+    }
+
 }
