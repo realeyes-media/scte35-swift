@@ -146,7 +146,7 @@
 			children = (
 				D8E18C2122C6C5C6001EE620 /* SCTE35Converter+Extension */,
 				D8E18C0522C6C5C5001EE620 /* ModelObjects */,
-				D8E18C0322C6C5C5001EE620 /* Helper Converter */,
+				D8E18C0322C6C5C5001EE620 /* HelperConverter */,
 				D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */,
 				D8E18BFC22C6C57D001EE620 /* Info.plist */,
 				D89B2B2F22DD02530082445F /* LICENSE */,
@@ -155,12 +155,12 @@
 			path = "SCTE35-SwiftLibrary";
 			sourceTree = "<group>";
 		};
-		D8E18C0322C6C5C5001EE620 /* Helper Converter */ = {
+		D8E18C0322C6C5C5001EE620 /* HelperConverter */ = {
 			isa = PBXGroup;
 			children = (
 				D8E18C0422C6C5C5001EE620 /* BitConverter.swift */,
 			);
-			path = "Helper Converter";
+			path = HelperConverter;
 			sourceTree = "<group>";
 		};
 		D8E18C0522C6C5C5001EE620 /* ModelObjects */ = {
