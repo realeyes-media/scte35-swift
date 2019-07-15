@@ -14,6 +14,7 @@
 		D80011EE22C6CA63001F7A3A /* ThrownErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4022C6C885001EE620 /* ThrownErrorTests.swift */; };
 		D80011EF22C6CA66001F7A3A /* ConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4122C6C885001EE620 /* ConverterTests.swift */; };
 		D89B2B2A22DCFE570082445F /* SCTE35-SwiftLibrary.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */; };
+		D89B2B2C22DD01170082445F /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2B22DD01170082445F /* LICENSE */; };
 		D8E18BFD22C6C57D001EE620 /* SCTE35_SwiftLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D8E18C2422C6C5C6001EE620 /* BitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0422C6C5C5001EE620 /* BitConverter.swift */; };
 		D8E18C2522C6C5C6001EE620 /* SpliceInfoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0722C6C5C5001EE620 /* SpliceInfoSection.swift */; };
@@ -55,6 +56,7 @@
 		D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SCTE35_SwiftLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80011E422C6CA55001F7A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SCTE35-SwiftLibrary.podspec"; sourceTree = SOURCE_ROOT; };
+		D89B2B2B22DD01170082445F /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTE35_SwiftLibrary.h; sourceTree = "<group>"; };
 		D8E18BFC22C6C57D001EE620 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */,
 				D8E18BFC22C6C57D001EE620 /* Info.plist */,
 				D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */,
+				D89B2B2B22DD01170082445F /* LICENSE */,
 			);
 			path = "SCTE35-SwiftLibrary";
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D89B2B2C22DD01170082445F /* LICENSE in Resources */,
 				D89B2B2A22DCFE570082445F /* SCTE35-SwiftLibrary.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
