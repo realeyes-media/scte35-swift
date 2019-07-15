@@ -11,6 +11,8 @@ import Foundation
 public struct SCTE35Converter {
     private let minimumBitsInSpliceInfoSection = 200
 
+    public init() { }
+
     /// Example of a valid base64String: /DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAAA3//AAApPWwDDEFCQ0QwMTIzNDU2SBAAAGgCL9A=
     /// - Throws: An error of type `SCTE35ParsingError`
     public func parseFrom(base64String: String) throws -> SpliceInfoSection {
