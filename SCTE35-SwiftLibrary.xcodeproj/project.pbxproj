@@ -13,6 +13,31 @@
 		D80011ED22C6CA61001F7A3A /* SpliceCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C3F22C6C885001EE620 /* SpliceCommandTests.swift */; };
 		D80011EE22C6CA63001F7A3A /* ThrownErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4022C6C885001EE620 /* ThrownErrorTests.swift */; };
 		D80011EF22C6CA66001F7A3A /* ConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4122C6C885001EE620 /* ConverterTests.swift */; };
+		D83932A022DE295B00CC8435 /* SCTE35Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2322C6C5C6001EE620 /* SCTE35Converter.swift */; };
+		D83932A122DE295F00CC8435 /* SCTE35Converter+PrivateMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2222C6C5C6001EE620 /* SCTE35Converter+PrivateMethods.swift */; };
+		D83932A222DE296500CC8435 /* SpliceInfoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0722C6C5C5001EE620 /* SpliceInfoSection.swift */; };
+		D83932A322DE296B00CC8435 /* Bit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0922C6C5C5001EE620 /* Bit.swift */; };
+		D83932A422DE296B00CC8435 /* EncryptionAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0A22C6C5C5001EE620 /* EncryptionAlgorithm.swift */; };
+		D83932A522DE296B00CC8435 /* SCTE35ParsingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0B22C6C5C5001EE620 /* SCTE35ParsingError.swift */; };
+		D83932A622DE296B00CC8435 /* Tier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0C22C6C5C5001EE620 /* Tier.swift */; };
+		D83932A722DE297600CC8435 /* DTMFInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0E22C6C5C5001EE620 /* DTMFInfo.swift */; };
+		D83932A822DE297600CC8435 /* AudioInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0F22C6C5C6001EE620 /* AudioInfo.swift */; };
+		D83932A922DE297600CC8435 /* SpliceDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1022C6C5C6001EE620 /* SpliceDescriptor.swift */; };
+		D83932AA22DE297600CC8435 /* SegmentationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1122C6C5C6001EE620 /* SegmentationInfo.swift */; };
+		D83932AB22DE297600CC8435 /* TimeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1222C6C5C6001EE620 /* TimeInfo.swift */; };
+		D83932AC22DE297600CC8435 /* AvailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1322C6C5C6001EE620 /* AvailInfo.swift */; };
+		D83932AD22DE297D00CC8435 /* ScheduleComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1622C6C5C6001EE620 /* ScheduleComponent.swift */; };
+		D83932AE22DE297D00CC8435 /* ScheduleEventInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1722C6C5C6001EE620 /* ScheduleEventInformation.swift */; };
+		D83932AF22DE297D00CC8435 /* ScheduleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1822C6C5C6001EE620 /* ScheduleInfo.swift */; };
+		D83932B022DE298100CC8435 /* InsertComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1A22C6C5C6001EE620 /* InsertComponent.swift */; };
+		D83932B122DE298100CC8435 /* InsertEventInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1B22C6C5C6001EE620 /* InsertEventInformation.swift */; };
+		D83932B222DE298100CC8435 /* ScheduleEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1C22C6C5C6001EE620 /* ScheduleEvent.swift */; };
+		D83932B322DE298100CC8435 /* SpliceTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1D22C6C5C6001EE620 /* SpliceTime.swift */; };
+		D83932B422DE298100CC8435 /* SpliceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1E22C6C5C6001EE620 /* SpliceCommand.swift */; };
+		D83932B522DE298100CC8435 /* InsertEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C1F22C6C5C6001EE620 /* InsertEvent.swift */; };
+		D83932B622DE298100CC8435 /* BreakDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2022C6C5C6001EE620 /* BreakDuration.swift */; };
+		D83932B722DE298800CC8435 /* BitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0422C6C5C5001EE620 /* BitConverter.swift */; };
+		D841825B22DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D89B2B2A22DCFE570082445F /* SCTE35-SwiftLibrary.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */; };
 		D89B2B3022DD02530082445F /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2F22DD02530082445F /* LICENSE */; };
 		D8E18BFD22C6C57D001EE620 /* SCTE35_SwiftLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -55,6 +80,9 @@
 /* Begin PBXFileReference section */
 		D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SCTE35_SwiftLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80011E422C6CA55001F7A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_tvOS_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTE35_tvOS_SwiftLibrary.h; sourceTree = "<group>"; };
+		D841825A22DD3D6300DB307D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SCTE35-SwiftLibrary.podspec"; sourceTree = SOURCE_ROOT; };
 		D89B2B2F22DD02530082445F /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +128,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D841825422DD3D6300DB307D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D8E18BF522C6C57D001EE620 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -123,10 +158,31 @@
 			path = SCTE35_SwiftLibraryTests;
 			sourceTree = "<group>";
 		};
+		D839329F22DE28D000CC8435 /* SharedResources */ = {
+			isa = PBXGroup;
+			children = (
+				D8E18C2122C6C5C6001EE620 /* SCTE35Converter+Extension */,
+				D8E18C0522C6C5C5001EE620 /* ModelObjects */,
+				D8E18C0322C6C5C5001EE620 /* HelperConverter */,
+			);
+			path = SharedResources;
+			sourceTree = "<group>";
+		};
+		D841825822DD3D6300DB307D /* SCTE35-tvOS-SwiftLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */,
+				D841825A22DD3D6300DB307D /* Info.plist */,
+			);
+			path = "SCTE35-tvOS-SwiftLibrary";
+			sourceTree = "<group>";
+		};
 		D8E18BEE22C6C57D001EE620 = {
 			isa = PBXGroup;
 			children = (
+				D839329F22DE28D000CC8435 /* SharedResources */,
 				D8E18BFA22C6C57D001EE620 /* SCTE35-SwiftLibrary */,
+				D841825822DD3D6300DB307D /* SCTE35-tvOS-SwiftLibrary */,
 				D80011E122C6CA55001F7A3A /* SCTE35_SwiftLibraryTests */,
 				D8E18BF922C6C57D001EE620 /* Products */,
 			);
@@ -137,6 +193,7 @@
 			children = (
 				D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */,
 				D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */,
+				D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,9 +201,6 @@
 		D8E18BFA22C6C57D001EE620 /* SCTE35-SwiftLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				D8E18C2122C6C5C6001EE620 /* SCTE35Converter+Extension */,
-				D8E18C0522C6C5C5001EE620 /* ModelObjects */,
-				D8E18C0322C6C5C5001EE620 /* HelperConverter */,
 				D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */,
 				D8E18BFC22C6C57D001EE620 /* Info.plist */,
 				D89B2B2F22DD02530082445F /* LICENSE */,
@@ -251,6 +305,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		D841825222DD3D6300DB307D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D841825B22DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D8E18BF322C6C57D001EE620 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -279,6 +341,24 @@
 			productName = SCTE35_SwiftLibraryTests;
 			productReference = D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D841825622DD3D6300DB307D /* SCTE35-tvOS-SwiftLibrary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D841825E22DD3D6300DB307D /* Build configuration list for PBXNativeTarget "SCTE35-tvOS-SwiftLibrary" */;
+			buildPhases = (
+				D841825222DD3D6300DB307D /* Headers */,
+				D841825322DD3D6300DB307D /* Sources */,
+				D841825422DD3D6300DB307D /* Frameworks */,
+				D841825522DD3D6300DB307D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SCTE35-tvOS-SwiftLibrary";
+			productName = "SCTE35-tvOS-SwiftLibrary";
+			productReference = D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		D8E18BF722C6C57D001EE620 /* SCTE35-SwiftLibrary */ = {
 			isa = PBXNativeTarget;
@@ -311,6 +391,9 @@
 					D80011DF22C6CA55001F7A3A = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
+					D841825622DD3D6300DB307D = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
 					D8E18BF722C6C57D001EE620 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
@@ -330,12 +413,20 @@
 			targets = (
 				D8E18BF722C6C57D001EE620 /* SCTE35-SwiftLibrary */,
 				D80011DF22C6CA55001F7A3A /* SCTE35_SwiftLibraryTests */,
+				D841825622DD3D6300DB307D /* SCTE35-tvOS-SwiftLibrary */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D80011DE22C6CA55001F7A3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D841825522DD3D6300DB307D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -363,6 +454,37 @@
 				D80011ED22C6CA61001F7A3A /* SpliceCommandTests.swift in Sources */,
 				D80011EE22C6CA63001F7A3A /* ThrownErrorTests.swift in Sources */,
 				D80011EB22C6CA5C001F7A3A /* OtherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D841825322DD3D6300DB307D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D83932A722DE297600CC8435 /* DTMFInfo.swift in Sources */,
+				D83932A822DE297600CC8435 /* AudioInfo.swift in Sources */,
+				D83932B322DE298100CC8435 /* SpliceTime.swift in Sources */,
+				D83932B522DE298100CC8435 /* InsertEvent.swift in Sources */,
+				D83932AD22DE297D00CC8435 /* ScheduleComponent.swift in Sources */,
+				D83932A222DE296500CC8435 /* SpliceInfoSection.swift in Sources */,
+				D83932A122DE295F00CC8435 /* SCTE35Converter+PrivateMethods.swift in Sources */,
+				D83932AC22DE297600CC8435 /* AvailInfo.swift in Sources */,
+				D83932AF22DE297D00CC8435 /* ScheduleInfo.swift in Sources */,
+				D83932B422DE298100CC8435 /* SpliceCommand.swift in Sources */,
+				D83932A522DE296B00CC8435 /* SCTE35ParsingError.swift in Sources */,
+				D83932A022DE295B00CC8435 /* SCTE35Converter.swift in Sources */,
+				D83932B722DE298800CC8435 /* BitConverter.swift in Sources */,
+				D83932B222DE298100CC8435 /* ScheduleEvent.swift in Sources */,
+				D83932A322DE296B00CC8435 /* Bit.swift in Sources */,
+				D83932A422DE296B00CC8435 /* EncryptionAlgorithm.swift in Sources */,
+				D83932AE22DE297D00CC8435 /* ScheduleEventInformation.swift in Sources */,
+				D83932AB22DE297600CC8435 /* TimeInfo.swift in Sources */,
+				D83932AA22DE297600CC8435 /* SegmentationInfo.swift in Sources */,
+				D83932B622DE298100CC8435 /* BreakDuration.swift in Sources */,
+				D83932B122DE298100CC8435 /* InsertEventInformation.swift in Sources */,
+				D83932A922DE297600CC8435 /* SpliceDescriptor.swift in Sources */,
+				D83932A622DE296B00CC8435 /* Tier.swift in Sources */,
+				D83932B022DE298100CC8435 /* InsertComponent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +563,60 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D841825C22DD3D6300DB307D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 53BVAZ8K9G;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "SCTE35-tvOS-SwiftLibrary/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.realeyes.SCTE35-tvOS-SwiftLibrary";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.2;
+			};
+			name = Debug;
+		};
+		D841825D22DD3D6300DB307D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 53BVAZ8K9G;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "SCTE35-tvOS-SwiftLibrary/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.realeyes.SCTE35-tvOS-SwiftLibrary";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.2;
 			};
 			name = Release;
 		};
@@ -626,6 +802,15 @@
 			buildConfigurations = (
 				D80011E822C6CA55001F7A3A /* Debug */,
 				D80011E922C6CA55001F7A3A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D841825E22DD3D6300DB307D /* Build configuration list for PBXNativeTarget "SCTE35-tvOS-SwiftLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D841825C22DD3D6300DB307D /* Debug */,
+				D841825D22DD3D6300DB307D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
