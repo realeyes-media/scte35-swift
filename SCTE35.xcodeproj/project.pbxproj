@@ -13,6 +13,8 @@
 		D80011ED22C6CA61001F7A3A /* SpliceCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C3F22C6C885001EE620 /* SpliceCommandTests.swift */; };
 		D80011EE22C6CA63001F7A3A /* ThrownErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4022C6C885001EE620 /* ThrownErrorTests.swift */; };
 		D80011EF22C6CA66001F7A3A /* ConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4122C6C885001EE620 /* ConverterTests.swift */; };
+		D831871F22DE498F002E63A9 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2F22DD02530082445F /* LICENSE */; };
+		D831872022DE498F002E63A9 /* SCTE35.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2922DCFE560082445F /* SCTE35.podspec */; };
 		D83932A022DE295B00CC8435 /* SCTE35Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2322C6C5C6001EE620 /* SCTE35Converter.swift */; };
 		D83932A122DE295F00CC8435 /* SCTE35Converter+PrivateMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2222C6C5C6001EE620 /* SCTE35Converter+PrivateMethods.swift */; };
 		D83932A222DE296500CC8435 /* SpliceInfoSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0722C6C5C5001EE620 /* SpliceInfoSection.swift */; };
@@ -430,6 +432,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D831871F22DE498F002E63A9 /* LICENSE in Resources */,
+				D831872022DE498F002E63A9 /* SCTE35.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,7 +593,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -616,7 +620,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};
