@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D80011E522C6CA55001F7A3A /* SCTE35_SwiftLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */; };
+		D80011E522C6CA55001F7A3A /* SCTE35.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8E18BF822C6C57D001EE620 /* SCTE35.framework */; };
 		D80011EB22C6CA5C001F7A3A /* OtherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C4922C6C8D1001EE620 /* OtherTests.swift */; };
 		D80011EC22C6CA5E001F7A3A /* ValidCueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C3E22C6C885001EE620 /* ValidCueTests.swift */; };
 		D80011ED22C6CA61001F7A3A /* SpliceCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C3F22C6C885001EE620 /* SpliceCommandTests.swift */; };
@@ -38,7 +38,7 @@
 		D83932B622DE298100CC8435 /* BreakDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C2022C6C5C6001EE620 /* BreakDuration.swift */; };
 		D83932B722DE298800CC8435 /* BitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0422C6C5C5001EE620 /* BitConverter.swift */; };
 		D841825B22DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D89B2B2A22DCFE570082445F /* SCTE35-SwiftLibrary.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */; };
+		D89B2B2A22DCFE570082445F /* SCTE35.podspec in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2922DCFE560082445F /* SCTE35.podspec */; };
 		D89B2B3022DD02530082445F /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D89B2B2F22DD02530082445F /* LICENSE */; };
 		D8E18BFD22C6C57D001EE620 /* SCTE35_SwiftLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D8E18C2422C6C5C6001EE620 /* BitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E18C0422C6C5C5001EE620 /* BitConverter.swift */; };
@@ -83,9 +83,9 @@
 		D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_tvOS_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTE35_tvOS_SwiftLibrary.h; sourceTree = "<group>"; };
 		D841825A22DD3D6300DB307D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "SCTE35-SwiftLibrary.podspec"; sourceTree = SOURCE_ROOT; };
+		D89B2B2922DCFE560082445F /* SCTE35.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SCTE35.podspec; sourceTree = SOURCE_ROOT; };
 		D89B2B2F22DD02530082445F /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
-		D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8E18BF822C6C57D001EE620 /* SCTE35.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTE35_SwiftLibrary.h; sourceTree = "<group>"; };
 		D8E18BFC22C6C57D001EE620 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8E18C0422C6C5C5001EE620 /* BitConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitConverter.swift; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D80011E522C6CA55001F7A3A /* SCTE35_SwiftLibrary.framework in Frameworks */,
+				D80011E522C6CA55001F7A3A /* SCTE35.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,7 +191,7 @@
 		D8E18BF922C6C57D001EE620 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */,
+				D8E18BF822C6C57D001EE620 /* SCTE35.framework */,
 				D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */,
 				D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */,
 			);
@@ -204,7 +204,7 @@
 				D8E18BFB22C6C57D001EE620 /* SCTE35_SwiftLibrary.h */,
 				D8E18BFC22C6C57D001EE620 /* Info.plist */,
 				D89B2B2F22DD02530082445F /* LICENSE */,
-				D89B2B2922DCFE560082445F /* SCTE35-SwiftLibrary.podspec */,
+				D89B2B2922DCFE560082445F /* SCTE35.podspec */,
 			);
 			path = "SCTE35-SwiftLibrary";
 			sourceTree = "<group>";
@@ -360,9 +360,9 @@
 			productReference = D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D8E18BF722C6C57D001EE620 /* SCTE35-SwiftLibrary */ = {
+		D8E18BF722C6C57D001EE620 /* SCTE35 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D8E18C0022C6C57D001EE620 /* Build configuration list for PBXNativeTarget "SCTE35-SwiftLibrary" */;
+			buildConfigurationList = D8E18C0022C6C57D001EE620 /* Build configuration list for PBXNativeTarget "SCTE35" */;
 			buildPhases = (
 				D8E18BF322C6C57D001EE620 /* Headers */,
 				D8E18BF422C6C57D001EE620 /* Sources */,
@@ -373,9 +373,9 @@
 			);
 			dependencies = (
 			);
-			name = "SCTE35-SwiftLibrary";
+			name = SCTE35;
 			productName = "SCTE35-SwiftLibrary";
-			productReference = D8E18BF822C6C57D001EE620 /* SCTE35_SwiftLibrary.framework */;
+			productReference = D8E18BF822C6C57D001EE620 /* SCTE35.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -399,7 +399,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D8E18BF222C6C57D001EE620 /* Build configuration list for PBXProject "SCTE35-SwiftLibrary" */;
+			buildConfigurationList = D8E18BF222C6C57D001EE620 /* Build configuration list for PBXProject "SCTE35" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -411,7 +411,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D8E18BF722C6C57D001EE620 /* SCTE35-SwiftLibrary */,
+				D8E18BF722C6C57D001EE620 /* SCTE35 */,
 				D80011DF22C6CA55001F7A3A /* SCTE35_SwiftLibraryTests */,
 				D841825622DD3D6300DB307D /* SCTE35-tvOS-SwiftLibrary */,
 			);
@@ -438,7 +438,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D89B2B3022DD02530082445F /* LICENSE in Resources */,
-				D89B2B2A22DCFE570082445F /* SCTE35-SwiftLibrary.podspec in Resources */,
+				D89B2B2A22DCFE570082445F /* SCTE35.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,7 +524,7 @@
 /* Begin PBXTargetDependency section */
 		D80011E722C6CA55001F7A3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D8E18BF722C6C57D001EE620 /* SCTE35-SwiftLibrary */;
+			target = D8E18BF722C6C57D001EE620 /* SCTE35 */;
 			targetProxy = D80011E622C6CA55001F7A3A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -815,7 +815,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D8E18BF222C6C57D001EE620 /* Build configuration list for PBXProject "SCTE35-SwiftLibrary" */ = {
+		D8E18BF222C6C57D001EE620 /* Build configuration list for PBXProject "SCTE35" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D8E18BFE22C6C57D001EE620 /* Debug */,
@@ -824,7 +824,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D8E18C0022C6C57D001EE620 /* Build configuration list for PBXNativeTarget "SCTE35-SwiftLibrary" */ = {
+		D8E18C0022C6C57D001EE620 /* Build configuration list for PBXNativeTarget "SCTE35" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D8E18C0122C6C57D001EE620 /* Debug */,

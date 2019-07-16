@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D8E18BF722C6C57D001EE620"
-               BuildableName = "SCTE35_SwiftLibrary.framework"
-               BlueprintName = "SCTE35-SwiftLibrary"
-               ReferencedContainer = "container:SCTE35-SwiftLibrary.xcodeproj">
+               BuildableName = "SCTE35.framework"
+               BlueprintName = "SCTE35"
+               ReferencedContainer = "container:SCTE35.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "D80011DF22C6CA55001F7A3A"
                BuildableName = "SCTE35_SwiftLibraryTests.xctest"
                BlueprintName = "SCTE35_SwiftLibraryTests"
-               ReferencedContainer = "container:SCTE35-SwiftLibrary.xcodeproj">
+               ReferencedContainer = "container:SCTE35.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D8E18BF722C6C57D001EE620"
-            BuildableName = "SCTE35_SwiftLibrary.framework"
-            BlueprintName = "SCTE35-SwiftLibrary"
-            ReferencedContainer = "container:SCTE35-SwiftLibrary.xcodeproj">
+            BuildableName = "SCTE35.framework"
+            BlueprintName = "SCTE35"
+            ReferencedContainer = "container:SCTE35.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,9 +65,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D8E18BF722C6C57D001EE620"
-            BuildableName = "SCTE35_SwiftLibrary.framework"
-            BlueprintName = "SCTE35-SwiftLibrary"
-            ReferencedContainer = "container:SCTE35-SwiftLibrary.xcodeproj">
+            BuildableName = "SCTE35.framework"
+            BlueprintName = "SCTE35"
+            ReferencedContainer = "container:SCTE35.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -83,9 +83,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D8E18BF722C6C57D001EE620"
-            BuildableName = "SCTE35_SwiftLibrary.framework"
-            BlueprintName = "SCTE35-SwiftLibrary"
-            ReferencedContainer = "container:SCTE35-SwiftLibrary.xcodeproj">
+            BuildableName = "SCTE35.framework"
+            BlueprintName = "SCTE35"
+            ReferencedContainer = "container:SCTE35.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
