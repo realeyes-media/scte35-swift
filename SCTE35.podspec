@@ -18,6 +18,6 @@ s.tvos.deployment_target = '10.0'
 s.swift_version = '5.0'
 s.requires_arc = true
 
-s.source_files  = "SCTE35-SwiftLibrary", "SCTE35-SwiftLibrary/HelperConverter/*.swift", "SCTE35-SwiftLibrary/**/*.{h,m,swift}"
+s.source_files  = "SCTE35-SwiftLibrary", "SCTE35-SwiftLibrary/HelperConverter/*.swift", "SCTE35-SwiftLibrary/**/*.{h,m,swift}", "SCTE35_SwiftLibraryTests/*.{swift}", "SharedResources/**/*.swift"
 
 end
