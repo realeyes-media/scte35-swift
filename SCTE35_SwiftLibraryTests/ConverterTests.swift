@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SCTE35_SwiftLibrary
+@testable import SCTE35
 
 class ConverterTests: XCTestCase {
     let validCue = "/DA9AAAAAAAAAACABQb+0fha8wAnAiVDVUVJSAAAv3/PAAD4+mMNEQ4FTEEzMDkICAAAAAAuU4SBNAAAPIaCPw=="

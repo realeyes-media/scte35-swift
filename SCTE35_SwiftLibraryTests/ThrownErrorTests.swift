@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SCTE35_SwiftLibrary
+@testable import SCTE35
 
 class ThrownErrorTests: XCTestCase {
 
