@@ -368,8 +368,8 @@ public struct SegmentationUPID {
 public struct SegmentationUPIDInformation {
     /// These have been tested against several, but not all of SegmentationUPID.type
     /// Feel free to fork this repo and add additional decoding
-    var string: String?
-    var array: [SegmentationUPID]?
+    public var string: String?
+    public var array: [SegmentationUPID]?
 
     init?(type: Int, relevantBits: [Bit]) {
         switch type {
