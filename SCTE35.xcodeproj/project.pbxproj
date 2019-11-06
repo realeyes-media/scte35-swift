@@ -82,7 +82,7 @@
 /* Begin PBXFileReference section */
 		D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SCTE35_SwiftLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D80011E422C6CA55001F7A3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35_tvOS_SwiftLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D841825722DD3D6300DB307D /* SCTE35.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SCTE35.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D841825922DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCTE35_tvOS_SwiftLibrary.h; sourceTree = "<group>"; };
 		D841825A22DD3D6300DB307D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D89B2B2922DCFE560082445F /* SCTE35.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SCTE35.podspec; sourceTree = SOURCE_ROOT; };
@@ -195,7 +195,7 @@
 			children = (
 				D8E18BF822C6C57D001EE620 /* SCTE35.framework */,
 				D80011E022C6CA55001F7A3A /* SCTE35_SwiftLibraryTests.xctest */,
-				D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */,
+				D841825722DD3D6300DB307D /* SCTE35.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -359,7 +359,7 @@
 			);
 			name = "SCTE35-tvOS-SwiftLibrary";
 			productName = "SCTE35-tvOS-SwiftLibrary";
-			productReference = D841825722DD3D6300DB307D /* SCTE35_tvOS_SwiftLibrary.framework */;
+			productReference = D841825722DD3D6300DB307D /* SCTE35.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D8E18BF722C6C57D001EE620 /* SCTE35 */ = {
@@ -588,7 +588,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.realeyes.SCTE35-tvOS-SwiftLibrary";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = SCTE35;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -615,7 +615,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.realeyes.SCTE35-tvOS-SwiftLibrary";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = SCTE35;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
