@@ -791,4 +791,69 @@ class ValidCueTests: XCTestCase {
         XCTAssertNil(spliceAvail.ecrc32)
     }
 
+    let validTimeSegAdIdCue2 = "/DCxAAAAAAAAAP/wEAUAAAAAf78A/gAAADwAAAAAAJACjkNVRUkAAAAAf/8AABEqiA16Dh4zMDMwMzAzMTM0MzQzNjM5MzIzNzMxMzgzOTMyMzYOWDQzNzU2NTU0Nzk3MDY1M0Q3MzZFNjY1Rjc0NkY3OTZGNzQ2MTVGNkU2NjZDNUYzMjNCNEI2NTc5M0Q3MDYyM0I1NjYxNkM3NTY1M0Q3NDZGNzk2Rjc0NjE2AQHypciA"
+    func testValidTimeSegAdIdCue2() {
+
+        let timeSignal = try! converter.parseFrom(base64String: validTimeSegAdIdCue2)
+        XCTAssertEqual(timeSignal.tableID, 252)
+        XCTAssertEqual(timeSignal.isSectionSyntaxIndicatorOn, false)
+        XCTAssertEqual(timeSignal.isPrivateIndicatorOn, false)
+        XCTAssertEqual(timeSignal.sectionLength, 56)
+        XCTAssertEqual(timeSignal.protocolVersion, 0)
+        XCTAssertEqual(timeSignal.hasEncryptedPacket, false)
+        XCTAssertEqual(timeSignal.encryptionAlgorithm, .noAlgorithm)
+        XCTAssertEqual(timeSignal.ptsAdjustment, 0)
+        XCTAssertEqual(timeSignal.cwIndex, 255)
+        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0xFFF")
+
+        XCTAssertEqual(timeSignal.spliceCommandLength, 5)
+        XCTAssertEqual(timeSignal.spliceCommandType, 6)
+        switch timeSignal.spliceCommand {
+        case .timeSignal(spliceTime: let spliceTime):
+            XCTAssertEqual(spliceTime.isTimeSpecified, true)
+            XCTAssertEqual(spliceTime.ptsTime, 0)
+        default:
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(timeSignal.descriptorLoopLength, 34)
+        XCTAssertEqual(timeSignal.spliceDescriptors.count, 1)
+        switch timeSignal.spliceDescriptors.first! {
+        case .segmentation(info: let info):
+            guard let additionalInfo = info.additionalInfo else {
+                XCTAssert(false)
+                return
+            }
+            XCTAssertEqual(info.tag, 2)
+            XCTAssertEqual(info.length, 32)
+            XCTAssertEqual(info.identifier, 1129661769)
+            XCTAssertEqual(info.eventID, 3)
+            XCTAssertEqual(additionalInfo.isProgramSegmentedMode, true)
+            XCTAssertEqual(additionalInfo.hasSegmentationDuration, true)
+            XCTAssertNil(additionalInfo.restrictions)
+            XCTAssertNil(additionalInfo.pidComponents)
+            XCTAssertEqual(additionalInfo.segmentationDuration, 2702700)
+            XCTAssertEqual(additionalInfo.segmentationUPID.type, 3)
+            XCTAssertEqual(additionalInfo.segmentationUPID.name, "Ad-ID")
+            XCTAssertEqual(additionalInfo.segmentationUPID.description, "Defined by the Advertising Digital Identification, LLC group. 12 characters; 4 alpha characters (company identification prefix) followed by 8 alphanumeric characters. (See [Ad-ID])")
+
+            guard let upidInfo = additionalInfo.segmentationUPID.info else {
+                XCTAssert(false)
+                return
+            }
+
+            XCTAssertEqual(upidInfo.string, "ABCD0123456H")
+            XCTAssertNil(upidInfo.array)
+
+            XCTAssertEqual(additionalInfo.segmentationTypeID, .programStart)
+            XCTAssertEqual(additionalInfo.segmentNumber, 0)
+            XCTAssertEqual(additionalInfo.segmentsExpected, 0)
+
+        default:
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(timeSignal.crc32, "0x68022FD0")
+        XCTAssertNil(timeSignal.ecrc32)
+    }
 }
