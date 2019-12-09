@@ -6,6 +6,26 @@ Swift library for parsing [SCTE35](https://www.scte.org/SCTEDocs/Standards/ANSI_
 
 * SCTE35 Binary Parsing
 
+## Installation
+
+This library is available through Carthage or Cocoapods
+
+### Carthage
+
+Add the following to your Cartfile replacing `<version>` with desired version number, example `1.0.5`
+
+```text
+github "realeyes-media/scte35-swift" "<version>"
+```
+
+### Cocoapods
+
+Add the following to your Podfile replacing `<version>` with desired version number, example `1.0.5`
+
+```text
+pod 'SCTE35', :git => 'https://github.com/realeyes-media/scte35-swift.git', :tag => '<version>'
+```
+
 ## API
 
 Parse From Base64 String
