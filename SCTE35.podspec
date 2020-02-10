@@ -5,7 +5,7 @@
 
 Pod::Spec.new do |s|
 s.name             = 'SCTE35'
-s.version          = '1.0.5'
+s.version          = '1.0.6'
 s.summary          = 'SCTE Library for Swift.'
 s.description      = 'Converts hex strings and base64 strings into SCTE 35 Objects per the specifications at https://www.scte.org/SCTEDocs/Standards/SCTE%2035%202016.pdf'
 s.homepage         = 'https://realeyes.com'
