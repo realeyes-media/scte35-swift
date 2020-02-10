@@ -33,7 +33,10 @@ public struct InsertEvent {
             }
             let rangeOfInsertEventInformation = 40..<bits.count
             let insertEventInformationBits = Array(bits[rangeOfInsertEventInformation])
-            self.info = InsertEventInformation(bits: insertEventInformationBits)
+            guard let info = InsertEventInformation(bits: insertEventInformationBits) else {
+                throw SCTE35ParsingError.unableToCreateSpliceCommand(type: CommandType.insert)
+            }
+            self.info = info
         }
     }
 }
