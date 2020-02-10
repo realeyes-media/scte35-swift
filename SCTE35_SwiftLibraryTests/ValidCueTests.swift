@@ -791,34 +791,32 @@ class ValidCueTests: XCTestCase {
         XCTAssertNil(spliceAvail.ecrc32)
     }
 
-    let cueWithArrayOfUPID = "/DCxAAAAAAAAAP/wEAUAAAAAf78A/gAAADwAAAAAAJACjkNVRUkAAAAAf/8AABEqiA16Dh4zMDMwMzAzMTM0MzQzNjM5MzIzNzMxMzgzOTMyMzYOWDQzNzU2NTU0Nzk3MDY1M0Q3MzZFNjY1Rjc0NkY3OTZGNzQ2MTVGNkU2NjZDNUYzMjNCNEI2NTc5M0Q3MDYyM0I1NjYxNkM3NTY1M0Q3NDZGNzk2Rjc0NjE2AQHypciA"
+    let cueWithArrayOfUPID = "/DA9AAAAAAAAAACABQb+0fha8wAnAiVDVUVJSAAAv3/PAAD4+mMNEQ4FTEEzMDkICAAAAAAuU4SBNAAAPIaCPw=="
     func testCueWithArrayOfUPID() {
         let timeSignal = try! converter.parseFrom(base64String: cueWithArrayOfUPID)
         XCTAssertEqual(timeSignal.tableID, 252)
         XCTAssertEqual(timeSignal.isSectionSyntaxIndicatorOn, false)
         XCTAssertEqual(timeSignal.isPrivateIndicatorOn, false)
-        XCTAssertEqual(timeSignal.sectionLength, 177)
+        XCTAssertEqual(timeSignal.sectionLength, 61)
         XCTAssertEqual(timeSignal.protocolVersion, 0)
         XCTAssertEqual(timeSignal.hasEncryptedPacket, false)
         XCTAssertEqual(timeSignal.encryptionAlgorithm, .noAlgorithm)
         XCTAssertEqual(timeSignal.ptsAdjustment, 0)
         XCTAssertEqual(timeSignal.cwIndex, 0)
-        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0xFFF")
+        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0x8")
 
-        XCTAssertEqual(timeSignal.spliceCommandLength, 16)
-        XCTAssertEqual(timeSignal.spliceCommandType, 5)
+        XCTAssertEqual(timeSignal.spliceCommandLength, 5)
+        XCTAssertEqual(timeSignal.spliceCommandType, 6)
         
         switch timeSignal.spliceCommand {
-        case let .insert(insertEvent):
-            XCTAssertEqual(insertEvent.id, 0)
-            XCTAssertEqual(insertEvent.isCancelEvent, false)
-            XCTAssertNil(insertEvent.info)
-            break
+        case let .timeSignal(spliceTime):
+            XCTAssertTrue(spliceTime.isTimeSpecified)
+            XCTAssertEqual(spliceTime.ptsTime, 3522714355)
         default:
             XCTAssert(false)
         }
 
-        XCTAssertEqual(timeSignal.descriptorLoopLength, 144)
+        XCTAssertEqual(timeSignal.descriptorLoopLength, 39)
         XCTAssertEqual(timeSignal.spliceDescriptors.count, 1)
         switch timeSignal.spliceDescriptors.first! {
         case .segmentation(info: let info):
@@ -827,14 +825,14 @@ class ValidCueTests: XCTestCase {
                 return
             }
             XCTAssertEqual(info.tag, 2)
-            XCTAssertEqual(info.length, 142)
+            XCTAssertEqual(info.length, 37)
             XCTAssertEqual(info.identifier, 1129661769)
-            XCTAssertEqual(info.eventID, 0)
+            XCTAssertEqual(info.eventID, 1207959743)
             XCTAssertEqual(additionalInfo.isProgramSegmentedMode, true)
             XCTAssertEqual(additionalInfo.hasSegmentationDuration, true)
-            XCTAssertNil(additionalInfo.restrictions)
+            XCTAssertNotNil(additionalInfo.restrictions)
             XCTAssertNil(additionalInfo.pidComponents)
-            XCTAssertEqual(additionalInfo.segmentationDuration, 1125000)
+            XCTAssertEqual(additionalInfo.segmentationDuration, 16317027)
             XCTAssertEqual(additionalInfo.segmentationUPID.type, 13)
             XCTAssertEqual(additionalInfo.segmentationUPID.name, "MID()")
             XCTAssertEqual(additionalInfo.segmentationUPID.description, "Multiple UPID types structure as defined in section 10.3.3.4.")
@@ -847,15 +845,89 @@ class ValidCueTests: XCTestCase {
             XCTAssertNil(upidInfo.string)
             XCTAssertEqual(upidInfo.array?.count, 2)
 
-            XCTAssertEqual(additionalInfo.segmentationTypeID, .distributorPlacementOpportunityStart)
-            XCTAssertEqual(additionalInfo.segmentNumber, 1)
-            XCTAssertEqual(additionalInfo.segmentsExpected, 1)
+            XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
+            XCTAssertEqual(additionalInfo.segmentNumber, 0)
+            XCTAssertEqual(additionalInfo.segmentsExpected, 0)
 
         default:
             XCTAssert(false)
         }
 
-        XCTAssertEqual(timeSignal.crc32, "0xF2A5C880")
+        XCTAssertEqual(timeSignal.crc32, "0x3C86823F")
+        XCTAssertNil(timeSignal.ecrc32)
+    }
+    
+    let privateUPIDStructure = "/DCVAAAAAsrbAP/wBQb/mbLvEAB/AntDVUVJAAAAAn/TAACkydoMZ05CQ1V7J2Fzc2V0SWQnOidwZWFjb2NrXzE1Mzk0MycsJ2N1ZURhdGEnOnsnY3VlVHlwZSc6J2FmZmlsaWF0ZV9icmVhaycsJ2tleSc6J3BiJywndmFsdWUnOidhZmZpbGlhdGUnfX00AAAAAJYJLnk="
+    func testPrivateUPIDStructure() {
+        
+        let timeSignal = try! converter.parseFrom(base64String: privateUPIDStructure)
+        XCTAssertEqual(timeSignal.tableID, 252)
+        XCTAssertEqual(timeSignal.isSectionSyntaxIndicatorOn, false)
+        XCTAssertEqual(timeSignal.isPrivateIndicatorOn, false)
+        XCTAssertEqual(timeSignal.sectionLength, 149)
+        XCTAssertEqual(timeSignal.protocolVersion, 0)
+        XCTAssertEqual(timeSignal.hasEncryptedPacket, false)
+        XCTAssertEqual(timeSignal.encryptionAlgorithm, .noAlgorithm)
+        XCTAssertEqual(timeSignal.ptsAdjustment, 183003)
+        XCTAssertEqual(timeSignal.cwIndex, 0)
+        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0xFFF")
+
+        XCTAssertEqual(timeSignal.spliceCommandLength, 5)
+        XCTAssertEqual(timeSignal.spliceCommandType, 6)
+        switch timeSignal.spliceCommand {
+        case .timeSignal(spliceTime: let spliceTime):
+            XCTAssertEqual(spliceTime.isTimeSpecified, true)
+            XCTAssertEqual(spliceTime.ptsTime, 6873607952)
+        default:
+            XCTAssert(false)
+        }
+        
+        XCTAssertEqual(timeSignal.descriptorLoopLength, 127)
+        XCTAssertEqual(timeSignal.spliceDescriptors.count, 1)
+        switch timeSignal.spliceDescriptors.first! {
+        case .segmentation(info: let info):
+            guard let additionalInfo = info.additionalInfo else {
+                XCTAssert(false)
+                return
+            }
+            XCTAssertEqual(info.tag, 2)
+            XCTAssertEqual(info.length, 123)
+            XCTAssertEqual(info.identifier, 1129661769)
+            XCTAssertEqual(info.eventID, 2)
+            XCTAssertEqual(additionalInfo.isProgramSegmentedMode, true)
+            XCTAssertEqual(additionalInfo.hasSegmentationDuration, true)
+            XCTAssertNotNil(additionalInfo.restrictions)
+            XCTAssertEqual(additionalInfo.restrictions?.isWebDeliveryAllowed, true)
+            XCTAssertEqual(additionalInfo.restrictions?.isNotRegionallyBlackedOut, false)
+            XCTAssertEqual(additionalInfo.restrictions?.isArchiveAllowed, false)
+            XCTAssertEqual(additionalInfo.restrictions?.deviceRestrictions, DeviceRestrictions.noRestrictions)
+            
+            XCTAssertNil(additionalInfo.pidComponents)
+
+            XCTAssertEqual(additionalInfo.segmentationDuration, 10799578)
+            XCTAssertEqual(additionalInfo.segmentationUPID.type, 12)
+            XCTAssertEqual(additionalInfo.segmentationUPID.name, "MPU()")
+            XCTAssertEqual(additionalInfo.segmentationUPID.description, "Managed Private UPID structure as defined in section 10.3.3.3.")
+
+            guard let upidInfo = additionalInfo.segmentationUPID.info else {
+                XCTAssert(false)
+                return
+            }
+
+            XCTAssertEqual(upidInfo.string, "NBCU{\'assetId\':\'peacock_153943\',\'cueData\':{\'cueType\':\'affiliate_break\',\'key\':\'pb\',\'value\':\'affiliate\'}}")
+            XCTAssertNil(upidInfo.array)
+
+            XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
+            XCTAssertEqual(additionalInfo.segmentNumber, 0)
+            XCTAssertEqual(additionalInfo.segmentsExpected, 0)
+            XCTAssertEqual(additionalInfo.subSegmentNumber, 0)
+            XCTAssertEqual(additionalInfo.subSegmentsExpected, 0)
+
+        default:
+            XCTAssert(false)
+        }
+
+        XCTAssertEqual(timeSignal.crc32, "0x96092E79")
         XCTAssertNil(timeSignal.ecrc32)
     }
 }

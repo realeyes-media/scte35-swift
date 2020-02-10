@@ -144,6 +144,9 @@ extension SCTE35Converter {
             let nextDescriptorsBits = Array(bits[nextDescriptorsBitsRange])
             bits.removeSubrange(nextDescriptorsBitsRange)
             
+            // If `nextDescriptorsBits.isEmpty` this could just be an descrepency between `splice_descriptor_loop_length` and `descriptor_length` so just continue.
+            guard !nextDescriptorsBits.isEmpty else { continue }
+            
             switch descriptorTagInt {
             case 0x00:
                 guard let availInfo = AvailInfo(tag: descriptorTagInt, length: lengthInBytes, relevantBits: nextDescriptorsBits) else {
