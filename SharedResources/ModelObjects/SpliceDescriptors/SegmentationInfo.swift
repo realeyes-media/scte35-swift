@@ -454,7 +454,7 @@ public enum SegmentationTypeID {
     case networkStart
     case networkEnd
 
-    init?(integerValue: Int) {
+    public init?(integerValue: Int) {
         switch integerValue {
         case 0x00:
             self = .notIndicated
