@@ -454,7 +454,7 @@ public enum SegmentationTypeID {
     case networkStart
     case networkEnd
 
-    init?(integerValue: Int) {
+    public init?(integerValue: Int) {
         switch integerValue {
         case 0x00:
             self = .notIndicated
@@ -527,6 +527,85 @@ public enum SegmentationTypeID {
         case 0x50:
             self = .networkStart
         case 0x51:
+            self = .networkEnd
+        default:
+            return nil
+        }
+    }
+    
+    public init?(stringValue: String) {
+        switch stringValue {
+        case "0x00":
+            self = .notIndicated
+        case "0x01":
+            self = .contentIdentification
+        case "0x10":
+            self = .programStart
+        case "0x11":
+            self = .programEnd
+        case "0x12":
+            self = .programEarlyTermination
+        case "0x13":
+            self = .programBreakaway
+        case "0x14":
+            self = .programResumption
+        case "0x15":
+            self = .programRunoverPlanned
+        case "0x16":
+            self = .programRunoverUnplanned
+        case "0x17":
+            self = .programOverlapStart
+        case "0x18":
+            self = .programBlackoutOverride
+        case "0x19":
+            self = .programStartInProgress
+        case "0x20":
+            self = .chapterStart
+        case "0x21":
+            self = .chapterEnd
+        case "0x22":
+            self = .breakStart
+        case "0x23":
+            self = .breakEnd
+        case "0x24":
+            self = .openingCreditStart
+        case "0x25":
+            self = .openingCreditEnd
+        case "0x26":
+            self = .closingCreditStart
+        case "0x27":
+            self = .closingCreditEnd
+        case "0x30":
+            self = .providerAdvertisementStart
+        case "0x31":
+            self = .providerAdvertisementEnd
+        case "0x32":
+            self = .distributorAdvertisementStart
+        case "0x33":
+            self = .distributorAdvertisementEnd
+        case "0x34":
+            self = .providerPlacementOpportunityStart
+        case "0x35":
+            self = .providerPlacementOpportunityEnd
+        case "0x36":
+            self = .distributorPlacementOpportunityStart
+        case "0x37":
+            self = .distributorPlacementOpportunityEnd
+        case "0x38":
+            self = .providerOverlayPlacementOpportunityStart
+        case "0x39":
+            self = .providerOverlayPlacementOpportunityEnd
+        case "0x3A":
+            self = .distributorOverlayPlacementOpportunityStart
+        case "0x3B":
+            self = .distributorOverlayPlacementOpportunityEnd
+        case "0x40":
+            self = .unscheduledEventStart
+        case "0x41":
+            self = .unscheduledEventEnd
+        case "0x50":
+            self = .networkStart
+        case "0x51":
             self = .networkEnd
         default:
             return nil
