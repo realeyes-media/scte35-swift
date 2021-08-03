@@ -791,7 +791,7 @@ class ValidCueTests: XCTestCase {
         XCTAssertNil(spliceAvail.ecrc32)
     }
 
-    let cueWithArrayOfUPID = "/DA9AAAAAAAAAACABQb+0fha8wAnAiVDVUVJSAAAv3/PAAD4+mMNEQ4FTEEzMDkICAAAAAAuU4SBNAAAPIaCPw=="
+    let cueWithArrayOfUPID = "/DCxAAAAAAAAAP/wEAUAAAAAf78A/gAAADwAAAAAAJACjkNVRUkAAAAAf/8AABEqiA16Dh4zMDMwMzAzMTM0MzQzNjM5MzIzNzMxMzgzOTMyMzYOWDQzNzU2NTU0Nzk3MDY1M0Q3MzZFNjY1Rjc0NkY3OTZGNzQ2MTVGNkU2NjZDNUYzMjNCNEI2NTc5M0Q3MDYyM0I1NjYxNkM3NTY1M0Q3NDZGNzk2Rjc0NjE2AQHypciA"
     func testCueWithArrayOfUPID() {
         let timeSignal = try! converter.parseFrom(base64String: cueWithArrayOfUPID)
         XCTAssertEqual(timeSignal.tableID, 252)
