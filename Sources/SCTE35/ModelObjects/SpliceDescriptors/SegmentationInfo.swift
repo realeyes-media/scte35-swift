@@ -374,16 +374,23 @@ public struct SegmentationUPIDInformation {
     init?(type: Int, relevantBits: [Bit]) {
         switch type {
         case 0x04:
-            self.string = BitConverter.smpteString(fromBits: relevantBits)
+            guard let smpteString = BitConverter.smpteString(fromBits: relevantBits) else { return nil }
+            self.string = smpteString
             self.array = nil
         case 0x06:
-            self.string = BitConverter.isanString(fromBits: relevantBits)
+            guard let isanString = BitConverter.isanString(fromBits: relevantBits) else { return nil }
+            self.string = isanString
+            self.array = nil
+        case 0x07:
+            guard let tidString = BitConverter.tidString(from: relevantBits) else { return nil }
+            self.string = tidString
             self.array = nil
         case 0x08:
             self.string = BitConverter.hexString(fromBits: relevantBits)
             self.array = nil
         case 0x0A:
-            self.string = BitConverter.eidrString(fromBits: relevantBits)
+            guard let eidrString = BitConverter.eidrString(fromBits: relevantBits) else { return nil }
+            self.string = eidrString
             self.array = nil
         case 0x0D:
             self.string = nil

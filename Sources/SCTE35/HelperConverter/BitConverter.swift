@@ -159,4 +159,29 @@ class BitConverter {
         }
         return data.base64EncodedString()
     }
+
+    // Tribune Media Systems Program ID.  12 characters; 2 alpha characters followed by 10 numbers
+    static func tidString(from bits: [Bit]) -> String? {
+        let decodedString = BitConverter.string(fromBits: bits)
+        guard
+            let decodedString = decodedString,
+            decodedString.count == 12
+        else {
+            return nil
+        }
+
+        // Check that string follows TID (Tribune Media Systems Program identifier) format rules
+        for (index, char) in decodedString.enumerated() {
+            switch index {
+            case 0..<2:
+                if !char.isLetter { return nil }
+            case 2..<12:
+                if !char.isNumber { return nil }
+            default:
+                return nil
+            }
+        }
+
+        return decodedString
+    }
 }

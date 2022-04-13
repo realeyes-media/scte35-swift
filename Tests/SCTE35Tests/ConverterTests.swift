@@ -79,4 +79,30 @@ class ConverterTests: XCTestCase {
         let bitsAsString = BitConverter.string(fromBits: sampleBits)!
         XCTAssertEqual(bitsAsString, sampleString)
     }
+
+    func testTidStringFromBits() {
+        let testCases = [
+            ("AB1234567890", true),
+            ("12ABCDEFGHIJ", false),
+            ("A34", false),
+            ("ćë1234567890", false),
+            ("ćë123456789ū", false),
+            ("!B1234567890", false),
+            ("AB123456789!", false),
+        ]
+
+        for testCase in testCases {
+            guard let data = testCase.0.data(using: .utf8) else {
+                XCTFail("Couldn't convert \(testCase.0) into data")
+                continue
+            }
+
+            let string = BitConverter.tidString(from: BitConverter.bits(fromData: data))
+            if testCase.1 == true {
+                XCTAssertEqual(testCase.0, string)
+            } else {
+                XCTAssertNil(string)
+            }
+        }
+    }
 }
