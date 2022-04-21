@@ -80,12 +80,39 @@ class ConverterTests: XCTestCase {
         XCTAssertEqual(bitsAsString, sampleString)
     }
 
+    func testAdIdStringFromBits() {
+        let testCases = [
+            ("ABCD12345678", true),
+            ("ABCD1234ABCD", true),
+            ("12ABCDEFGHIJ", false),
+            ("A34", false),
+            ("ABCD1234ABCD1234", false),
+            ("ćë123456789ū", false),
+            ("!B1234567890", false),
+            ("AB123456789!", false),
+        ]
+
+        for testCase in testCases {
+            guard let data = testCase.0.data(using: .utf8) else {
+                XCTFail("Couldn't convert \(testCase.0) into data")
+                continue
+            }
+
+            let string = BitConverter.adIdString(from: BitConverter.bits(fromData: data))
+            if testCase.1 == true {
+                XCTAssertEqual(testCase.0, string)
+            } else {
+                XCTAssertNil(string)
+            }
+        }
+    }
+
     func testTidStringFromBits() {
         let testCases = [
             ("AB1234567890", true),
             ("12ABCDEFGHIJ", false),
             ("A34", false),
-            ("ćë1234567890", false),
+            ("AB12345678901234", false),
             ("ćë123456789ū", false),
             ("!B1234567890", false),
             ("AB123456789!", false),
@@ -100,6 +127,31 @@ class ConverterTests: XCTestCase {
             let string = BitConverter.tidString(from: BitConverter.bits(fromData: data))
             if testCase.1 == true {
                 XCTAssertEqual(testCase.0, string)
+            } else {
+                XCTAssertNil(string)
+            }
+        }
+    }
+
+    func testAdIStringFromBits() {
+        let testCases = [
+            ("PO : provider.com/MOVE1234567890123456", true),
+            ("SIGNAL:provider.com/MOVE1234567890123456", true),
+            ("SIGNAL:provider.com?MOVE1234567890123456", false),
+            ("bad", false),
+            ("", false)
+        ]
+
+        for testCase in testCases {
+            guard let data = testCase.0.data(using: .utf8) else {
+                XCTFail("Couldn't convert \(testCase.0) into data")
+                continue
+            }
+
+            let string = BitConverter.adiString(from: BitConverter.bits(fromData: data))
+            if testCase.1 == true {
+                guard let theString = string else { XCTFail("Expected a valid adi String"); return}
+                XCTAssertTrue(testCase.0.contains(theString))
             } else {
                 XCTAssertNil(string)
             }

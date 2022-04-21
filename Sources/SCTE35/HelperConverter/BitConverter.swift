@@ -160,11 +160,35 @@ class BitConverter {
         return data.base64EncodedString()
     }
 
+    // Advertising Digital Identification, LLC Group.  12 characters; 4 alpha characters (company ID prefix)
+    //  followed by 8 alpha numeric characters
+    static func adIdString(from bits: [Bit]) -> String? {
+        guard
+            let decodedString = BitConverter.string(fromBits: bits),
+            decodedString.count == 12
+        else {
+            return nil
+        }
+
+        // Check that string follows TID (Tribune Media Systems Program identifier) format rules
+        for (index, char) in decodedString.enumerated() {
+            switch index {
+            case 0..<4:
+                if !char.isLetter { return nil }
+            case 2..<12:
+                if !char.isLetter && !char.isNumber { return nil }
+            default:
+                return nil
+            }
+        }
+
+        return decodedString
+    }
+
     // Tribune Media Systems Program ID.  12 characters; 2 alpha characters followed by 10 numbers
     static func tidString(from bits: [Bit]) -> String? {
-        let decodedString = BitConverter.string(fromBits: bits)
         guard
-            let decodedString = decodedString,
+            let decodedString = BitConverter.string(fromBits: bits),
             decodedString.count == 12
         else {
             return nil
@@ -183,5 +207,40 @@ class BitConverter {
         }
 
         return decodedString
+    }
+
+    // CableLabs metadata identifier
+    static func adiString(from bits: [Bit]) -> String? {
+        // convert bits to characters
+        // split string by ":" and remove spaces
+        //
+        guard let decodedString = BitConverter.string(fromBits: bits) else { return nil }
+
+        // Extract the parts of the adi UPID and check that they conform to some of the rules specified in the `CableLabs metadata identifier` section
+        let parts = decodedString.components(separatedBy: ":").map { $0.trimmingCharacters(in: .whitespaces) }
+        guard
+            parts.count == 2,
+            let elementString = parts.first,
+            AdiElement(rawValue: elementString) != nil,
+            let id = parts.last,
+            id.contains("/")
+        else { return nil }
+
+        return id
+
+        // this enum is used as a way to check that the element part of the adi UPID is valid
+        enum AdiElement: String {
+            case preview = "PREVIEW"
+            case MPEG2HD = "MPEG2HD"
+            case MPEG2SD = "MPEG2SD"
+            case AVCHD = "AVCHD"
+            case AVCSD = "AVCSD"
+            case HEVCHD = "HEVCHD"
+            case HEVCSD = "HEVCSD"
+            case signal = "SIGNAL"
+            case placementOpportunity = "PO"
+            case blackout = "BLACKOUT"
+            case other = "OTHER"
+        }
     }
 }

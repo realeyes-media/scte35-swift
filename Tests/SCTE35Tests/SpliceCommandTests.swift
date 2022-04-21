@@ -50,11 +50,11 @@ class SpliceCommandTests: XCTestCase {
     func testInvalidInsertCue() {
         do {
             let _ = try converter.parseFrom(base64String: invalidInsertCue)
-            XCTAssert(false)
+            XCTFail("Expected to fail when parsing invalid cue")
         } catch SCTE35ParsingError.unableToCreateSpliceCommand(type: let type) {
             XCTAssertEqual(type, CommandType.insert)
         } catch {
-            XCTAssert(false)
+            XCTFail("Unexpected error thrown from parseFrom: \(error)")
         }
     }
 

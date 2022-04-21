@@ -65,8 +65,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "ABCD0123456H")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .AdID(let string):
+                XCTAssertEqual(string, "ABCD0123456H")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -131,8 +135,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "060A2B34.01010105.01010D20.13000000.D2C9036C.8F195343.AB7014D2.D718BFDA")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .UMID(let string):
+                XCTAssertEqual(string, "060A2B34.01010105.01010D20.13000000.D2C9036C.8F195343.AB7014D2.D718BFDA")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programEnd)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -200,8 +208,12 @@ class ValidCueTests: XCTestCase {
 
             // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
             // Examples online are few and wildly inconsistent
-            XCTAssertEqual(upidInfo.string, "153C-7365-B36F-844C-?-8734-9420-?")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .ISAN(let string):
+                XCTAssertEqual(string, "153C-7365-B36F-844C-?-8734-9420-?")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -268,8 +280,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "MV0004146400")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .TID(let string):
+                XCTAssertEqual(string, "MV0004146400")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -344,8 +360,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "0x2CA0A1E3")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .TI(let string):
+                XCTAssertEqual(string, "0x2CA0A1E3")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programBlackoutOverride)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -389,8 +409,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "0x2CA0A18A")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .TI(let string):
+                XCTAssertEqual(string, "0x2CA0A18A")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programEnd)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -459,8 +483,12 @@ class ValidCueTests: XCTestCase {
 
             // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
             // Examples online are few and wildly inconsistent
-            XCTAssertEqual(upidInfo.string, "10.5240/F85A-E100-B068-5B8F-B1C8-?")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .EIDR(let string):
+                XCTAssertEqual(string, "10.5240/F85A-E100-B068-5B8F-B1C8-?")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .programStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -621,17 +649,27 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertNil(upidInfo.string)
-            XCTAssertEqual(upidInfo.array!.count, 2)
+            switch upidInfo {
+            case .MID(let upids):
+                guard let firstUPID = upids.first else { XCTFail("Expected a 2 element UPID array"); return }
+                switch firstUPID {
+                case .ADS(let string):
+                    XCTAssertEqual(string, "LA309")
+                default:
+                    XCTFail("Incorrect upid type: \(firstUPID.name)")
+                }
 
-            let firstUPID = upidInfo.array![0]
-            XCTAssertEqual(firstUPID.type, 14)
-            XCTAssertEqual(firstUPID.info?.string, "LA309")
+                guard let secondUPID = upids.last else { XCTFail("Expected a 2 element UPID array"); return }
+                switch secondUPID {
+                case .TI(let string):
+                    XCTAssertEqual(string, "0x2E538481")
+                default:
+                    XCTFail("Incorrect upid type: \(secondUPID.name)")
+                }
 
-            let secondUPID = upidInfo.array![1]
-            XCTAssertEqual(secondUPID.type, 8)
-            XCTAssertEqual(secondUPID.info?.string, "0x2E538481")
-
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -776,8 +814,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "0x2CA0A18A")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .TI(let string):
+                XCTAssertEqual(string, "0x2CA0A18A")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 2)
@@ -813,7 +855,7 @@ class ValidCueTests: XCTestCase {
             XCTAssertTrue(spliceTime.isTimeSpecified)
             XCTAssertEqual(spliceTime.ptsTime, 3522714355)
         default:
-            XCTAssert(false)
+            XCTFail("Expected the splice command to be a time signal")
         }
 
         XCTAssertEqual(timeSignal.descriptorLoopLength, 39)
@@ -842,8 +884,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertNil(upidInfo.string)
-            XCTAssertEqual(upidInfo.array?.count, 2)
+            switch upidInfo {
+            case .MID(let upids):
+                XCTAssertEqual(upids.count, 2)
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
@@ -914,8 +960,12 @@ class ValidCueTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(upidInfo.string, "NBCU{\'assetId\':\'peacock_153943\',\'cueData\':{\'cueType\':\'affiliate_break\',\'key\':\'pb\',\'value\':\'affiliate\'}}")
-            XCTAssertNil(upidInfo.array)
+            switch upidInfo {
+            case .MPU(let string):
+                XCTAssertEqual(string, "NBCU{\'assetId\':\'peacock_153943\',\'cueData\':{\'cueType\':\'affiliate_break\',\'key\':\'pb\',\'value\':\'affiliate\'}}")
+            default:
+                XCTFail("Incorrect upid type: \(upidInfo.name)")
+            }
 
             XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
             XCTAssertEqual(additionalInfo.segmentNumber, 0)
