@@ -265,12 +265,12 @@ public struct PIDComponent {
 }
 
 /// Segmentation_upid according to segmentation_upid_type as defined in Table 21.
-public struct SegmentationUPID {
+public struct SegmentationUPID: Equatable {
     /// A value from the following table. There are multiple types allowed to ensure that programmers will be able to use an id that their systems support. It is expected that the consumers of these ids will have an out-of-band method of collecting other data related to these numbers and therefore they do not need to be of identical types. These ids may be in other descriptors in the program and, where the same identifier is used (ISAN for example), it shall match between programs.
-    public let type: Int
+    public let type: UInt8
 
     /// Length in bytes of segmentation_upid() as indicated by Table 21. If there is no segmentation_upid() present, segmentation_upid_length shall be set to zero.
-    private let length: Int
+    private let length: UInt8
 
     /// Length and identification from Table 21 - segmentation_upid_type. This structure’s contents and length are determined by the segmentation_upid_type and segmentation_upid_length fields. An example would be a type of 0x06 for ISAN and a length of 12 bytes. This field would then contain the ISAN identifier for the content to which this descriptor refers.
     public var name: String {
@@ -353,14 +353,80 @@ public struct SegmentationUPID {
 
     init?(type: Int, length: Int, relevantBits: [Bit]) {
         guard type <= 0xFF else { return nil }
-        self.type = type
-        self.length = length
+        self.type = UInt8(type)
+        self.length = UInt8(length)
 
         if relevantBits.isEmpty {
             self.info = nil
         } else {
             self.info = SegmentationUPIDInformation(type: type, relevantBits: relevantBits)
         }
+    }
+
+    static func getMultipleUpids(from relevantBits: [Bit]) -> [SegmentationUPID]? {
+        guard relevantBits.count >= 16 else { return nil }
+
+        var upids = [SegmentationUPID]()
+
+        var bits = relevantBits
+        while bits.count > 0 {
+            let upidTypeRange = 0..<8
+            let upidType = BitConverter.integer(fromBits: Array<Bit>(bits[upidTypeRange]))
+            let upidLengthRange = 8..<16
+            let upidLengthInBytes = BitConverter.integer(fromBits: Array<Bit>(bits[upidLengthRange]))
+            let startIndex = 16
+            let endIndex = 16 + (upidLengthInBytes * 8)
+            guard bits.count >= endIndex else { return nil }
+            let segmentationBitsRange = startIndex..<endIndex
+            let upidBits = Array<Bit>(bits[segmentationBitsRange])
+            guard let segmentationUPID = SegmentationUPID(type: upidType, length: upidLengthInBytes, relevantBits: upidBits) else {
+                return nil
+            }
+            upids.append(segmentationUPID)
+            bits.removeSubrange(0..<endIndex)
+        }
+
+        return upids
+    }
+}
+
+extension SegmentationUPID: BitEncodable {
+    func encode(into bits: inout [Bit]) throws {
+        var newBits = [Bit]()
+        newBits.append(contentsOf: BitConverter.bits(fromByte: type))
+        newBits.append(contentsOf: BitConverter.bits(fromByte: length))
+
+        switch info {
+        case .none:
+            break
+        case .userDefined(let value), .ISAN8(let value):
+            let bits = BitConverter.bits(from: Int(value), bitArraySize: Int(length*8))
+            newBits.append(contentsOf: bits)
+
+        case .ISCI(let value), .AdID(let value), .UMID(let value),
+                .ISAN(let value), .TID(let value), .TI(let value),
+                .ADI(let value), .EIDR(let value), .MPU(let value),
+                .ADS(let value), .URI(let value), .UUID(let value):
+            guard let stringData = value.data(using: .utf8) else { throw SCTE35ParsingError.invalidStringAsUtf8 }
+            let bits = BitConverter.bits(fromData: stringData)
+            newBits.append(contentsOf: bits)
+
+        case .ATSC(let atsc):
+            try atsc.encode(into: &bits)
+
+        case .MID(let upids):
+            let bits = try encodeMultipleUpids(upids)
+            newBits.append(contentsOf: bits)
+
+        }
+    }
+
+    private func encodeMultipleUpids(_ upids: [SegmentationUPID]) throws -> [Bit] {
+        var allUpidBits = [Bit]()
+        for upid in upids {
+            try upid.encode(into: &allUpidBits)
+        }
+        return allUpidBits
     }
 }
 
@@ -377,7 +443,7 @@ public enum SegmentationUPIDInformation: Equatable {
     case EIDR(String)
     case ATSC(ATSCContentIdentifier)
     case MPU(String)
-    case MID([Self])
+    case MID([SegmentationUPID])
     case ADS(String)
     case URI(String)
     case UUID(String)
@@ -419,7 +485,7 @@ public enum SegmentationUPIDInformation: Equatable {
             self = .MPU(mpu)
         case 0x0D:
             guard
-                let multiUpids = SegmentationUPIDInformation.getMultipleUpids(from: relevantBits),
+                let multiUpids = SegmentationUPID.getMultipleUpids(from: relevantBits),
                 multiUpids.count > 0
             else { return nil }
             self = .MID(multiUpids)
@@ -434,32 +500,6 @@ public enum SegmentationUPIDInformation: Equatable {
         default:
             return nil
         }
-    }
-
-    static private func getMultipleUpids(from relevantBits: [Bit]) -> [SegmentationUPIDInformation]? {
-        guard relevantBits.count >= 16 else { return nil }
-
-        var upids = [SegmentationUPIDInformation]()
-
-        var bits = relevantBits
-        while bits.count > 0 {
-            let upidTypeRange = 0..<8
-            let upidType = BitConverter.integer(fromBits: Array<Bit>(bits[upidTypeRange]))
-            let upidLengthRange = 8..<16
-            let upidLengthInBytes = BitConverter.integer(fromBits: Array<Bit>(bits[upidLengthRange]))
-            let startIndex = 16
-            let endIndex = 16 + (upidLengthInBytes * 8)
-            guard bits.count >= endIndex else { return nil }
-            let segmentationBitsRange = startIndex..<endIndex
-            let upidBits = Array<Bit>(bits[segmentationBitsRange])
-            guard let segmentationUPID = SegmentationUPIDInformation(type: upidType, relevantBits: upidBits) else {
-                return nil
-            }
-            upids.append(segmentationUPID)
-            bits.removeSubrange(0..<endIndex)
-        }
-
-        return upids
     }
 }
 

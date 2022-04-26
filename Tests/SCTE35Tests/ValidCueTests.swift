@@ -651,7 +651,7 @@ class ValidCueTests: XCTestCase {
 
             switch upidInfo {
             case .MID(let upids):
-                guard let firstUPID = upids.first else { XCTFail("Expected a 2 element UPID array"); return }
+                guard let firstUPID = upids.first?.info else { XCTFail("Expected a 2 element UPID array"); return }
                 switch firstUPID {
                 case .ADS(let string):
                     XCTAssertEqual(string, "LA309")
@@ -659,7 +659,7 @@ class ValidCueTests: XCTestCase {
                     XCTFail("Incorrect upid type: \(firstUPID.name)")
                 }
 
-                guard let secondUPID = upids.last else { XCTFail("Expected a 2 element UPID array"); return }
+                guard let secondUPID = upids.last?.info else { XCTFail("Expected a 2 element UPID array"); return }
                 switch secondUPID {
                 case .TI(let string):
                     XCTAssertEqual(string, "0x2E538481")
@@ -839,26 +839,26 @@ class ValidCueTests: XCTestCase {
         XCTAssertEqual(timeSignal.tableID, 252)
         XCTAssertEqual(timeSignal.isSectionSyntaxIndicatorOn, false)
         XCTAssertEqual(timeSignal.isPrivateIndicatorOn, false)
-        XCTAssertEqual(timeSignal.sectionLength, 61)
+        XCTAssertEqual(timeSignal.sectionLength, 177)
         XCTAssertEqual(timeSignal.protocolVersion, 0)
         XCTAssertEqual(timeSignal.hasEncryptedPacket, false)
         XCTAssertEqual(timeSignal.encryptionAlgorithm, .noAlgorithm)
         XCTAssertEqual(timeSignal.ptsAdjustment, 0)
         XCTAssertEqual(timeSignal.cwIndex, 0)
-        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0x8")
+        XCTAssertEqual(timeSignal.tier.hexRepresentation, "0xFFF")
 
-        XCTAssertEqual(timeSignal.spliceCommandLength, 5)
-        XCTAssertEqual(timeSignal.spliceCommandType, 6)
+        XCTAssertEqual(timeSignal.spliceCommandLength, 16)
+        XCTAssertEqual(timeSignal.spliceCommandType, 5)
         
         switch timeSignal.spliceCommand {
-        case let .timeSignal(spliceTime):
-            XCTAssertTrue(spliceTime.isTimeSpecified)
-            XCTAssertEqual(spliceTime.ptsTime, 3522714355)
+        case .insert(let event):
+            XCTAssertFalse(event.isCancelEvent)
+            XCTAssertEqual(event.id, 0)
         default:
-            XCTFail("Expected the splice command to be a time signal")
+            XCTFail("Expected the splice command to be a splice insert")
         }
 
-        XCTAssertEqual(timeSignal.descriptorLoopLength, 39)
+        XCTAssertEqual(timeSignal.descriptorLoopLength, 144)
         XCTAssertEqual(timeSignal.spliceDescriptors.count, 1)
         switch timeSignal.spliceDescriptors.first! {
         case .segmentation(info: let info):
@@ -867,14 +867,14 @@ class ValidCueTests: XCTestCase {
                 return
             }
             XCTAssertEqual(info.tag, 2)
-            XCTAssertEqual(info.length, 37)
+            XCTAssertEqual(info.length, 142)
             XCTAssertEqual(info.identifier, 1129661769)
-            XCTAssertEqual(info.eventID, 1207959743)
+            XCTAssertEqual(info.eventID, 0)
             XCTAssertEqual(additionalInfo.isProgramSegmentedMode, true)
             XCTAssertEqual(additionalInfo.hasSegmentationDuration, true)
-            XCTAssertNotNil(additionalInfo.restrictions)
+            XCTAssertNil(additionalInfo.restrictions)
             XCTAssertNil(additionalInfo.pidComponents)
-            XCTAssertEqual(additionalInfo.segmentationDuration, 16317027)
+            XCTAssertEqual(additionalInfo.segmentationDuration, 1125000)
             XCTAssertEqual(additionalInfo.segmentationUPID.type, 13)
             XCTAssertEqual(additionalInfo.segmentationUPID.name, "MID()")
             XCTAssertEqual(additionalInfo.segmentationUPID.description, "Multiple UPID types structure as defined in section 10.3.3.4.")
@@ -891,15 +891,15 @@ class ValidCueTests: XCTestCase {
                 XCTFail("Incorrect upid type: \(upidInfo.name)")
             }
 
-            XCTAssertEqual(additionalInfo.segmentationTypeID, .providerPlacementOpportunityStart)
-            XCTAssertEqual(additionalInfo.segmentNumber, 0)
-            XCTAssertEqual(additionalInfo.segmentsExpected, 0)
+            XCTAssertEqual(additionalInfo.segmentationTypeID, .distributorPlacementOpportunityStart)
+            XCTAssertEqual(additionalInfo.segmentNumber, 1)
+            XCTAssertEqual(additionalInfo.segmentsExpected, 1)
 
         default:
             XCTAssert(false)
         }
 
-        XCTAssertEqual(timeSignal.crc32, "0x3C86823F")
+        XCTAssertEqual(timeSignal.crc32, "0xF2A5C880")
         XCTAssertNil(timeSignal.ecrc32)
     }
     

@@ -60,12 +60,7 @@ public struct SCTE35Converter {
         let spliceCommandInfo = getSpliceCommandRelevantBitsAndNextBitLocation(bitsArray, spliceCommandLengthInBytes: spliceCommandLengthInBytes)
         let spliceCommandRelevantBits = spliceCommandInfo.spliceCommandBits
         let descriptorInfoStartingIndex = spliceCommandInfo.nextBitLocation
-        let spliceCommand: SpliceCommand
-        do {
-            spliceCommand = try SpliceCommand(spliceCommandType: spliceCommandType, relevantBits: spliceCommandRelevantBits)
-        } catch {
-            throw error
-        }
+        let spliceCommand = try SpliceCommand(spliceCommandType: spliceCommandType, relevantBits: spliceCommandRelevantBits)
 
         guard descriptorInfoStartingIndex + 48 <= bitsArray.count else {
             // Double-checking, but this code should never run

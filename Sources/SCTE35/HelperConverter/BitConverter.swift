@@ -25,6 +25,54 @@ class BitConverter {
         return bits.reversed()
     }
 
+    /**
+     Will return an array of 16 bits
+     i.e. input = 15, output = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+     */
+    static func bits(from value: UInt16) -> [Bit] {
+        var bits: [Bit] = []
+        withUnsafeBytes(of: value) {
+            for bite in $0.reversed() {
+                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+            }
+        }
+        return bits
+    }
+
+    /**
+     Will return an array of 32 bits
+     i.e. input = 15, output =
+     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+     */
+    static func bits(from value: UInt32) -> [Bit] {
+        var bits: [Bit] = []
+        withUnsafeBytes(of: value) {
+            for bite in $0.reversed() {
+                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+            }
+        }
+        return bits
+    }
+
+    /**
+     Will return an array of `bitArraySize` bits
+     i.e. value = 15, bitArraySize = 9, output = [0, 0, 0, 0, 0, 1, 1, 1, 1]
+
+     If `bitArraySize` is smaller the maximum number of bits needed to represent
+     `value`, the array of bits that represent `value` will be truncated to `bitArraySize` and
+     the returned bit array cannot be converted back to `value`
+     */
+    static func bits(from value: Int, bitArraySize: Int) -> [Bit] {
+        var bits: [Bit] = []
+        withUnsafeBytes(of: value) {
+            for bite in $0.reversed() {
+                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+            }
+        }
+        return bits.suffix(bitArraySize)
+    }
+
     static func bits(fromData data: Data) -> [Bit] {
         var bits: [Bit] = []
         for byte in data {

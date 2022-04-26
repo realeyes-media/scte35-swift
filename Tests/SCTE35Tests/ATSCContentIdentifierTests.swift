@@ -12,15 +12,15 @@ class ATSCContentIdentifierTests: XCTestCase {
 
     func testInitFromBitsCorrectBitFormat() {
         let tsidBitString = "0001000100000010"
-        let tsidVal = UInt(tsidBitString, radix: 2)
+        let tsidVal = UInt16(tsidBitString, radix: 2)
 
         let reservedBitString = "00"
 
         let endOfDayBitString = "00010"
-        let endOfDayVal = UInt(endOfDayBitString, radix: 2)
+        let endOfDayVal = UInt8(endOfDayBitString, radix: 2)
 
         let uniqueForBitString = "001000110"
-        let uniqueForVal = UInt(uniqueForBitString, radix: 2)
+        let uniqueForVal = UInt16(uniqueForBitString, radix: 2)
 
         let contentIdBitString = "01100010011100010101"
         guard let contentIdBits = getBits(from: contentIdBitString) else { XCTFail(); return }
@@ -38,7 +38,6 @@ class ATSCContentIdentifierTests: XCTestCase {
         XCTAssertEqual(atscId?.endOfDay, endOfDayVal)
         XCTAssertEqual(atscId?.uniqueFor, uniqueForVal)
         XCTAssertEqual(atscId?.contentId, contentIdVal)
-
 
         if
             let atscJSON = try? JSONEncoder().encode(atscId),

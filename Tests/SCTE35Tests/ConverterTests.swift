@@ -37,6 +37,52 @@ class ConverterTests: XCTestCase {
         XCTAssertEqual(expectedRepresentation, sampleBit)
     }
 
+    func testBitsFromUInt16Converter() {
+        let expectedRepresentation: [Bit] = [
+            .zero, .zero, .zero, .zero, .zero, .zero, .zero, .one,
+            .zero, .zero, .zero, .one, .zero, .zero, .one, .one
+        ]
+
+        let sampleAsUInt16: UInt16 = 275
+        let sampleBits = BitConverter.bits(from: sampleAsUInt16)
+
+        XCTAssertEqual(expectedRepresentation, sampleBits)
+    }
+
+    func testBitsFromUInt32Converter() {
+        let expectedRepresentation: [Bit] = [
+            .zero, .zero, .zero, .zero, .zero, .one, .zero, .one,
+            .zero, .one, .zero, .one, .zero, .zero, .zero, .zero,
+            .one, .zero, .one, .zero, .zero, .zero, .zero, .zero,
+            .zero, .one, .zero, .one, .zero, .zero, .one, .zero
+        ]
+
+        let sampleAsUInt32: UInt32 = 89170002
+        let sampleBits = BitConverter.bits(from: sampleAsUInt32)
+
+        XCTAssertEqual(expectedRepresentation, sampleBits)
+    }
+
+    func testBitsFromIntWithMaxArraySizeConverter() {
+        var expectedRepresentation: [Bit] = [
+            .zero, .zero, .zero, .zero, .zero, .one, .one, .one, .zero, .one, .zero
+        ]
+
+        var sampleAsInt: Int = 58
+        var sampleBits = BitConverter.bits(from: sampleAsInt, bitArraySize: 11)
+
+        XCTAssertEqual(expectedRepresentation, sampleBits)
+
+        // test the edge case where bit array size is a number smaller than the array size needed to
+        // represent the provided value
+        expectedRepresentation = [
+            .zero, .zero, .zero, .zero, .zero
+        ]
+        sampleAsInt = 256
+        sampleBits = BitConverter.bits(from: sampleAsInt, bitArraySize: 5)
+        XCTAssertEqual(expectedRepresentation, sampleBits)
+    }
+
     func testBitsFromDataConverter() {
         let data = Data(base64Encoded: validCue)!
         let bits = BitConverter.bits(fromData: data)
