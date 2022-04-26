@@ -38,13 +38,6 @@ class ATSCContentIdentifierTests: XCTestCase {
         XCTAssertEqual(atscId?.endOfDay, endOfDayVal)
         XCTAssertEqual(atscId?.uniqueFor, uniqueForVal)
         XCTAssertEqual(atscId?.contentId, contentIdVal)
-
-        if
-            let atscJSON = try? JSONEncoder().encode(atscId),
-            let atscString = String(bytes: atscJSON, encoding: .utf8)
-        {
-            print(atscString)
-        }
     }
 
     func testInitFromBitsFailsLongBitFormat() {
@@ -73,6 +66,36 @@ class ATSCContentIdentifierTests: XCTestCase {
         }
 
         XCTAssertNil(ATSCContentIdentifier(from: bits))
+    }
+
+    func testEncode() {
+        let tsid: UInt16 = 40000
+        let endOfDay: UInt8 = 125   // this value cannot exceed 2^5 b/c the bit field for this is capped at 5 bits
+        let uniqueFor: UInt16 = 500  // this value cannot exceed 2^9 b/c the bit field for this is capped at 9 bits
+        let contentId: [Bit] = [
+            .zero, .one, .one, .zero, .one, .zero
+        ]
+
+        var bits = [Bit]()
+        bits.append(contentsOf: BitConverter.bits(from: tsid))
+        bits.append(contentsOf: [Bit](repeating: .zero, count: 2))  //reserved section of bits
+        bits.append(contentsOf: BitConverter.bits(from: Int(endOfDay), bitArraySize: 5))
+        bits.append(contentsOf: BitConverter.bits(from: Int(uniqueFor), bitArraySize: 9))
+        bits.append(contentsOf: contentId)
+
+        guard let atsc = ATSCContentIdentifier(from: bits) else {
+            XCTFail("Expected to be able to create an ATSC instance from bits")
+            return
+        }
+
+        var encodedBits = [Bit]()
+        do {
+            let atscBits = try atsc.encode()
+            encodedBits.append(contentsOf: atscBits)
+        } catch {
+            XCTFail("Expected to be able to encode ATSC instance into bits")
+        }
+        XCTAssertEqual(bits, encodedBits)
     }
 
     private func getBits(from string: String) -> [Bit]? {

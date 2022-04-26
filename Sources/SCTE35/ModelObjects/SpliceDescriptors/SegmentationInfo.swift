@@ -391,40 +391,44 @@ public struct SegmentationUPID: Equatable {
 }
 
 extension SegmentationUPID: BitEncodable {
-    func encode(into bits: inout [Bit]) throws {
-        var newBits = [Bit]()
-        newBits.append(contentsOf: BitConverter.bits(fromByte: type))
-        newBits.append(contentsOf: BitConverter.bits(fromByte: length))
+    func encode() throws -> [Bit] {
+        var bits = [Bit]()
+        bits.append(contentsOf: BitConverter.bits(fromByte: type))
+        bits.append(contentsOf: BitConverter.bits(fromByte: length))
 
         switch info {
         case .none:
             break
         case .userDefined(let value), .ISAN8(let value):
-            let bits = BitConverter.bits(from: Int(value), bitArraySize: Int(length*8))
-            newBits.append(contentsOf: bits)
+            let userDefinedBits = BitConverter.bits(from: Int(value), bitArraySize: Int(length*8))
+            bits.append(contentsOf: userDefinedBits)
 
         case .ISCI(let value), .AdID(let value), .UMID(let value),
                 .ISAN(let value), .TID(let value), .TI(let value),
                 .ADI(let value), .EIDR(let value), .MPU(let value),
                 .ADS(let value), .URI(let value), .UUID(let value):
             guard let stringData = value.data(using: .utf8) else { throw SCTE35ParsingError.invalidStringAsUtf8 }
-            let bits = BitConverter.bits(fromData: stringData)
-            newBits.append(contentsOf: bits)
+            let stringBits = BitConverter.bits(fromData: stringData)
+            bits.append(contentsOf: stringBits)
 
         case .ATSC(let atsc):
-            try atsc.encode(into: &bits)
+            let atscBits = try atsc.encode()
+            bits.append(contentsOf: atscBits)
 
         case .MID(let upids):
-            let bits = try encodeMultipleUpids(upids)
-            newBits.append(contentsOf: bits)
+            let midBits = try encodeMultipleUpids(upids)
+            bits.append(contentsOf: midBits)
 
         }
+
+        return bits
     }
 
     private func encodeMultipleUpids(_ upids: [SegmentationUPID]) throws -> [Bit] {
         var allUpidBits = [Bit]()
         for upid in upids {
-            try upid.encode(into: &allUpidBits)
+            let multiUpidBits = try upid.encode()
+            allUpidBits.append(contentsOf: multiUpidBits)
         }
         return allUpidBits
     }

@@ -12,7 +12,7 @@ import Foundation
  with a period of uniqueness. A “house number” is any number that the holder of the TSID wishes
  as constrained in ATSC Standard A/57B. Numbers are unique for each value of TSID
  */
-public struct ATSCContentIdentifier: Codable, Equatable {
+public struct ATSCContentIdentifier: Equatable, BitCodable {
     /// This 16 bit unsigned integer field shall contain a value of transport_stream_id per section 6.3.1
     ///  of A/65
     public let tsid: UInt16
@@ -23,14 +23,15 @@ public struct ATSCContentIdentifier: Codable, Equatable {
     ///   relative to the hour indicated by `endOfDay`, during which the `contentId` value is not reassigned
     ///   to different content.
     public let uniqueFor: UInt16
-    /// This variable length field shall be set to the value of the identifier according to the
-    ///  house number system or systems for the value of TSID.
-    public let contentId: String
-    // length in bits of the variable length content ID
-    private let contentIdLength: Int
-}
 
-extension ATSCContentIdentifier: BitCodable {
+    /// This variable length field shall be set to the value of the identifier according to the
+    ///  house number system or systems for the value of TSID.  Must be UTF8 encoded.
+    private let _contentId: [Bit]
+    /// Content ID value represented as a HEX string
+    public var contentId: String {
+        return BitConverter.hexString(fromBits: _contentId)
+    }
+
     init?(from bits: [Bit]) {
         // The number of bits must be greater than the number required
         //  to define the constant length bit fields plus the variable
@@ -41,23 +42,21 @@ extension ATSCContentIdentifier: BitCodable {
         //let reservedBits = Array(bits[16..<18])  /// currently unused reserved bit field
         let endDayBits = Array(bits[18..<23])
         let uniqueBits = Array(bits[23..<32])
-        contentIdLength = bits.count - 32
         let contentIdBits = Array(bits[32..<bits.count])
 
         tsid = UInt16(BitConverter.integer(fromBits: tsidBits))
         endOfDay = UInt8(BitConverter.integer(fromBits: endDayBits))
         uniqueFor = UInt16(BitConverter.integer(fromBits: uniqueBits))
-        contentId = BitConverter.hexString(fromBits: contentIdBits)
+        _contentId = contentIdBits
     }
 
-    func encode(into bits: inout [Bit]) throws {
-        var newBits = [Bit]()
-        newBits.append(contentsOf: BitConverter.bits(from: tsid))
-        newBits.append(contentsOf: BitConverter.bits(from: Int(endOfDay), bitArraySize: 5))
-        newBits.append(contentsOf: BitConverter.bits(from: Int(uniqueFor), bitArraySize: 9))
-        guard let contentIdData = contentId.data(using: .utf8) else { throw SCTE35ParsingError.invalidStringAsUtf8 }
-        let contentIdBits = BitConverter.bits(fromData: contentIdData).suffix(contentIdLength)
-        newBits.append(contentsOf: contentIdBits)
-        
+    func encode() throws -> [Bit] {
+        var bits = [Bit]()
+        bits.append(contentsOf: BitConverter.bits(from: tsid))
+        bits.append(contentsOf: [Bit](repeating: .zero, count: 2)) // reserved bits
+        bits.append(contentsOf: BitConverter.bits(from: Int(endOfDay), bitArraySize: 5))
+        bits.append(contentsOf: BitConverter.bits(from: Int(uniqueFor), bitArraySize: 9))
+        bits.append(contentsOf: _contentId)
+        return bits
     }
 }

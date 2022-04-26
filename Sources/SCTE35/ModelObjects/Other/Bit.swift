@@ -31,5 +31,5 @@ protocol BitDecodable {
 }
 
 protocol BitEncodable {
-    func encode(into bits: inout [Bit]) throws
+    func encode() throws -> [Bit]
 }
