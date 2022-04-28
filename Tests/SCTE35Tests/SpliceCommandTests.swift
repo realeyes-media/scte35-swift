@@ -49,7 +49,7 @@ class SpliceCommandTests: XCTestCase {
     func testInvalidInsertCue() {
         do {
             let _ = try converter.parseFrom(base64String: invalidInsertCue)
-            XCTFail("Expected to fail when parsing invalid cue")
+            XCTFail("Unexpectedly succeeded in parsing invalid cue")
         } catch SCTE35ParsingError.unableToParseDescriptor(let theType) {
             XCTAssertEqual(theType, DescriptorType.avail)
         } catch {

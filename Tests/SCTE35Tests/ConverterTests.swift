@@ -126,6 +126,54 @@ class ConverterTests: XCTestCase {
         XCTAssertEqual(bitsAsString, sampleString)
     }
 
+    func testBitsFromUMID() {
+        // Derived from the example textual representation in SCTE 35 (2020), table 22
+        //  the example contains 8 octets represented in hexadecimal, separated by periods
+        let umidString = "060A2B34.01010105.01010D20.13000000.D2C9036C.8F195343.AB7014D2.D718BFDA"
+        let expectedBits: [Bit] = [.zero, .zero, .zero, .zero, .zero, .one, .one, .zero, .zero, .zero, .zero, .zero, .one,
+                                    .zero, .one, .zero, .zero, .zero, .one, .zero, .one, .zero, .one, .one, .zero, .zero,
+                                    .one, .one, .zero, .one, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero,
+                                    .one, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .one, .zero, .zero, .zero, .zero,
+                                    .zero, .zero, .zero, .one, .zero, .zero, .zero, .zero, .zero, .one, .zero, .one, .zero,
+                                    .zero, .zero, .zero, .zero, .zero, .zero, .one, .zero, .zero, .zero, .zero, .zero, .zero,
+                                    .zero, .one, .zero, .zero, .zero, .zero, .one, .one, .zero, .one, .zero, .zero, .one,
+                                    .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .one, .zero, .zero, .one, .one,
+                                    .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero,
+                                    .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .zero, .one,
+                                    .one, .zero, .one, .zero, .zero, .one, .zero, .one, .one, .zero, .zero, .one,
+                                    .zero, .zero, .one, .zero, .zero, .zero, .zero, .zero, .zero, .one, .one, .zero, .one,
+                                    .one, .zero, .one, .one, .zero, .zero, .one, .zero, .zero, .zero, .one, .one, .one, .one,
+                                    .zero, .zero, .zero, .one, .one, .zero, .zero, .one, .zero, .one, .zero, .one, .zero,
+                                    .zero, .one, .one, .zero, .one, .zero, .zero, .zero, .zero, .one, .one, .one, .zero, .one,
+                                    .zero, .one, .zero, .one, .one, .zero, .one, .one, .one, .zero, .zero, .zero, .zero, .zero,
+                                    .zero, .zero, .one, .zero, .one, .zero, .zero, .one, .one, .zero, .one, .zero, .zero, .one,
+                                    .zero, .one, .one, .zero, .one, .zero, .one, .one, .one, .zero, .zero, .zero, .one, .one,
+                                    .zero, .zero, .zero, .one, .zero, .one, .one, .one, .one, .one, .one, .one, .one, .zero,
+                                    .one, .one, .zero, .one, .zero]
+        XCTAssertEqual(expectedBits, BitConverter.bits(fromUMID: umidString))
+    }
+
+    func testUMIDStringFromBits() {
+        // Derived from the example textual representation in SCTE 35 (2020), table 22
+        //  the example contains 8 octets represented in hexidecimal, separated by periods
+        let expectedUMIDString = "060A2B34.01010105.01010D20.13000000.D2C9036C.8F195343.AB7014D2.D718BFDA"
+        let umIdParts = expectedUMIDString.split(separator: ".")
+
+        var bits = [Bit]()
+        for hexString in umIdParts {
+            guard let integer = UInt32(hexString, radix: 16) else {
+                XCTFail("Could not convert hex string to integer")
+                return
+            }
+            bits.append(contentsOf: BitConverter.bits(from: integer))
+        }
+
+        print(bits)
+
+        let umid = BitConverter.umidString(fromBits: bits)
+        XCTAssertEqual(expectedUMIDString, umid)
+    }
+
     func testAdIdStringFromBits() {
         let testCases = [
             ("ABCD12345678", true),
@@ -202,5 +250,17 @@ class ConverterTests: XCTestCase {
                 XCTAssertNil(string)
             }
         }
+    }
+
+    func testIsanStringFromBitsNoVersion() {
+        let isanTestString = "B159-D8FA-0124-0000-K"
+        guard let bits = BitConverter.bits(fromIsan: isanTestString) else { XCTFail("Could not create bit array from ISAN"); return }
+        XCTAssertEqual(isanTestString, BitConverter.isanString(fromBits: bits))
+    }
+
+    func testIsanStringFromBitsWithVersion() {
+        let isanTestString = "0123-0E00-D07A-0090-O-00A0-070F-G"
+        guard let bits = BitConverter.bits(fromIsan: isanTestString) else { XCTFail("Could not create bit array from ISAN"); return }
+        XCTAssertEqual(isanTestString, BitConverter.isanString(fromBits: bits))
     }
 }

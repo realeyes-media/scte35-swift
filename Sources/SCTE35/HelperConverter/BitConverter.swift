@@ -115,7 +115,7 @@ class BitConverter {
         return string
     }
 
-    static func smpteString(fromBits bits: [Bit]) -> String? {
+    static func umidString(fromBits bits: [Bit]) -> String? {
         guard bits.count == 256 else { return nil }
         let nibbles = stride(from: 0, to: bits.count, by: 4).map { (last) -> [Bit] in
             return Array(bits[last..<last+4])
@@ -135,28 +135,95 @@ class BitConverter {
         return stringToReturn
     }
 
+    static func bits(fromUMID umid: String) -> [Bit]? {
+        guard umid.replacingOccurrences(of: ".", with: "").count == 64 else { return nil}
+
+        let hexParts = umid.split(separator: ".")
+        guard hexParts.count == 8 else { return nil }
+
+        var bits = [Bit]()
+        for hexString in hexParts {
+            guard let integer = UInt32(hexString, radix: 16) else {
+                return nil
+            }
+            bits.append(contentsOf: BitConverter.bits(from: integer))
+        }
+        return bits
+    }
+
     static func isanString(fromBits bits: [Bit]) -> String? {
-        guard bits.count == 96 else { return nil }
+        let containsVersion: Bool
+        if bits.count == 96 {
+            containsVersion = true
+        } else if bits.count == 64 {
+            containsVersion =  false
+        } else {
+            // number of bits does not represent a valid ISAN
+            return nil
+        }
+
         let nibbles = stride(from: 0, to: bits.count, by: 4).map { (last) -> [Bit] in
             return Array(bits[last..<last+4])
         }
 
-        var stringToReturn = ""
-        let indicesForDash = [3, 7, 11, 19]
-        for (index, nibble) in nibbles.enumerated() {
+        var isanDigits = [Int]()
+        for nibble in nibbles {
             let intValue = BitConverter.integer(fromBits: nibble)
-            let char = String(format: "%01X", intValue)
-            stringToReturn.append(char)
-            // TODO: - use page 9 of SCTE Documentation [ISO 15706-2] to find check characters
-            if indicesForDash.contains(index) {
-                stringToReturn.append("-")
-            } else if index == 15 {
-                stringToReturn.append("-?-")
-            } else if index == 23 {
-                stringToReturn.append("-?")
-            }
+            isanDigits.append(intValue)
         }
-        return stringToReturn
+
+        // There must always be a first check character for the root and episode segments
+        guard let firstCheckChar: Character = ISAN.calculateMod3637CheckCharacter(from: Array(isanDigits.prefix(16))) else { return nil }
+        // If there is no version, there is no second check character
+        let secondCheckChar: Character? = containsVersion ? ISAN.calculateMod3637CheckCharacter(from: isanDigits) : nil
+
+        var isanString = ""
+        for (index, digit) in isanDigits.enumerated() {
+            if index != 0 && index % 4 == 0 { isanString.append("-") }
+            let char = String(format: "%01X", digit)
+            isanString.append(char)
+        }
+
+        if !containsVersion {
+            isanString.append("-\(firstCheckChar)")
+        } else {
+            let firstCheckDigitIndex = isanString.index(isanString.startIndex, offsetBy: 19)
+            isanString.insert(contentsOf: "-\(firstCheckChar)", at: firstCheckDigitIndex)
+            guard let theSecondCheckChar = secondCheckChar else { return nil }
+            isanString.append("-\(theSecondCheckChar)")
+        }
+
+        return isanString
+    }
+
+    static func bits(fromIsan isan: String) -> [Bit]? {
+        let containsVersion: Bool
+        if isan.count == 33 {
+            containsVersion = true
+        } else if isan.count == 21 {
+            containsVersion =  false
+        } else {
+            // character count does not represent an ISAN string
+            return nil
+        }
+
+        // Create array of hexadecimals with check digits removed
+        var isanHexDecimals = isan.replacingOccurrences(of: "-", with: "").dropLast()
+        if containsVersion {
+            let firstCheckDigitIndex = isanHexDecimals.index(isanHexDecimals.startIndex, offsetBy: 16)
+            isanHexDecimals.remove(at: firstCheckDigitIndex)
+        }
+
+        let isanDecimals: [Int] = isanHexDecimals.compactMap { isanChar in
+            return ISAN.alphanumericChars.firstIndex(of: isanChar)
+        }
+
+        var bits = [Bit]()
+        for decimal in isanDecimals {
+            bits.append(contentsOf: BitConverter.bits(from: decimal, bitArraySize: 4))
+        }
+
+        return bits
     }
 
     static func eidrString(fromBits bits: [Bit]) -> String? {
@@ -261,7 +328,6 @@ class BitConverter {
     static func adiString(from bits: [Bit]) -> String? {
         // convert bits to characters
         // split string by ":" and remove spaces
-        //
         guard let decodedString = BitConverter.string(fromBits: bits) else { return nil }
 
         // Extract the parts of the adi UPID and check that they conform to some of the rules specified in the `CableLabs metadata identifier` section
@@ -276,7 +342,7 @@ class BitConverter {
 
         return id
 
-        // this enum is used as a way to check that the element part of the adi UPID is valid
+        // this enum is used as a way to check that the element part of the ADI UPID is valid
         enum AdiElement: String {
             case preview = "PREVIEW"
             case MPEG2HD = "MPEG2HD"
