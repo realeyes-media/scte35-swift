@@ -23,13 +23,13 @@ class ATSCContentIdentifierTests: XCTestCase {
         let uniqueForVal = UInt16(uniqueForBitString, radix: 2)
 
         let contentIdBitString = "01100010011100010101"
-        guard let contentIdBits = getBits(from: contentIdBitString) else { XCTFail(); return }
+        guard let contentIdBits = getBits(from: contentIdBitString) else { XCTFail("Couldn't get bits from string"); return }
         let contentIdVal = BitConverter.hexString(fromBits: contentIdBits)
 
         let fullBitstring = tsidBitString + reservedBitString + endOfDayBitString + uniqueForBitString + contentIdBitString
         var bits = [Bit]()
         for b in fullBitstring {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail(); return }
+            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
             bits.append(bit)
         }
 
@@ -44,7 +44,7 @@ class ATSCContentIdentifierTests: XCTestCase {
         var bits = [Bit]()
         // Create bit string that is longer than 242 bytes
         for b in String(repeating: "0", count: 242*9) {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail(); return }
+            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
             bits.append(bit)
         }
 
@@ -61,7 +61,7 @@ class ATSCContentIdentifierTests: XCTestCase {
         let fullBitstring = tsidBitString + reservedBitString + endOfDayBitString + uniqueForBitString + contentIdBitString
         var bits = [Bit]()
         for b in fullBitstring {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail(); return }
+            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
             bits.append(bit)
         }
 
@@ -84,7 +84,7 @@ class ATSCContentIdentifierTests: XCTestCase {
         bits.append(contentsOf: contentId)
 
         guard let atsc = ATSCContentIdentifier(from: bits) else {
-            XCTFail("Expected to be able to create an ATSC instance from bits")
+            XCTFail("Could not create an ATSC instance from bits")
             return
         }
 
@@ -93,7 +93,7 @@ class ATSCContentIdentifierTests: XCTestCase {
             let atscBits = try atsc.encode()
             encodedBits.append(contentsOf: atscBits)
         } catch {
-            XCTFail("Expected to be able to encode ATSC instance into bits")
+            XCTFail("Could not encode ATSC instance into bits")
         }
         XCTAssertEqual(bits, encodedBits)
     }
