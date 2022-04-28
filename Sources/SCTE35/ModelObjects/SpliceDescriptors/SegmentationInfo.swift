@@ -285,8 +285,10 @@ public struct SegmentationUPID: Equatable {
             return "Ad-ID"
         case 0x04:
             return "UMID"
-        case 0x05, 0x06:
+        case 0x05:
             return "ISAN"
+        case 0x06:
+            return "V-ISAN"
         case 0x07:
             return "TID"
         case 0x08:
@@ -305,8 +307,12 @@ public struct SegmentationUPID: Equatable {
             return "ADS Information"
         case 0x0F:
             return "URI"
-        default:
+        case 0x10:
+            return "UUID"
+        case 0x11...0xFF:
             return "reserved"
+        default:
+            return "Undefined UPID type"
         }
     }
 
@@ -343,9 +349,13 @@ public struct SegmentationUPID: Equatable {
         case 0x0E:
             return "Advertising information. The specific usage is out of scope of this standard."
         case 0x0F:
-            return "Universal Resource Identifier (see [RFC 3986]). "
-        default:
+            return "Universal Resource Identifier (see [RFC 3986])."
+        case 0x10:
+            return "Universally unique identifier (see [RFC 4122])."
+        case 0x11...0xFF:
             return "Reserved for future standardization."
+        default:
+            return "UPID type is not currently defined."
         }
     }
 
@@ -399,14 +409,14 @@ extension SegmentationUPID: BitEncodable {
         switch info {
         case .none:
             break
-        case .userDefined(let value), .ISAN8(let value):
+        case .userDefined(let value):
             let userDefinedBits = BitConverter.bits(from: Int(value), bitArraySize: Int(length*8))
             bits.append(contentsOf: userDefinedBits)
 
-        case .ISCI(let value), .AdID(let value), .UMID(let value),
-                .ISAN(let value), .TID(let value), .TI(let value),
-                .ADI(let value), .EIDR(let value), .MPU(let value),
-                .ADS(let value), .URI(let value), .UUID(let value):
+        case .ISCI(let value), .AdID(let value), .UMID(let value), .VISAN(let value),
+                .ISAN(let value), .TID(let value), .TI(let value), .ADI(let value),
+                .EIDR(let value), .MPU(let value), .ADS(let value), .URI(let value),
+                .UUID(let value):
             guard let stringData = value.data(using: .utf8) else { throw SCTE35ParsingError.invalidStringAsUtf8 }
             let stringBits = BitConverter.bits(fromData: stringData)
             bits.append(contentsOf: stringBits)
@@ -439,8 +449,8 @@ public enum SegmentationUPIDInformation: Equatable {
     case ISCI(String)
     case AdID(String)
     case UMID(String)
-    case ISAN8(UInt)
     case ISAN(String)
+    case VISAN(String)
     case TID(String)
     case TI(String)
     case ADI(String)
@@ -463,13 +473,14 @@ public enum SegmentationUPIDInformation: Equatable {
             guard let adId = BitConverter.adIdString(from: relevantBits) else { return nil }
             self = .AdID(adId)
         case 0x04:
-            guard let smtpe = BitConverter.smpteString(fromBits: relevantBits) else { return nil }
+            guard let smtpe = BitConverter.umidString(fromBits: relevantBits) else { return nil }
             self = .UMID(smtpe)
         case 0x05:
-            self = .ISAN8(UInt(BitConverter.integer(fromBits: relevantBits)))
-        case 0x6:
             guard let isan = BitConverter.isanString(fromBits: relevantBits) else { return nil }
             self = .ISAN(isan)
+        case 0x06:
+            guard let isan = BitConverter.isanString(fromBits: relevantBits) else { return nil }
+            self = .VISAN(isan)
         case 0x07:
             guard let tid = BitConverter.tidString(from: relevantBits) else { return nil }
             self = .TID(tid)
@@ -504,54 +515,6 @@ public enum SegmentationUPIDInformation: Equatable {
         default:
             return nil
         }
-    }
-}
-
-extension SegmentationUPIDInformation: CustomStringConvertible, CustomDebugStringConvertible {
-    public var name: String {
-        switch self {
-        case .userDefined: return "User Defined"
-        case .ISCI: return "ISCI"
-        case .AdID: return "Ad-ID"
-        case .UMID: return "UMID"
-        case .ISAN8: return "ISAN (8 byte)"
-        case .ISAN: return "ISAN (12 byte)"
-        case .TID: return "TID"
-        case .TI: return "TI"
-        case .ADI: return "ADI"
-        case .EIDR: return "EIDR"
-        case .ATSC: return "ATSC"
-        case .MPU: return "MPU"
-        case .MID: return "MID"
-        case .ADS: return "ADS"
-        case .URI: return "URI"
-        case .UUID: return "UUID"
-        }
-    }
-
-    public var description: String {
-        switch self {
-        case .userDefined: return "Deprecated: use type 0x0C; The segmentation_upid does not follow a standard naming scheme."
-        case .ISCI: return "**Deprecated** Use type 0x03, 8 characters; 4 alpha characters followed by 4 numbers."
-        case .AdID: return "Defined by the Advertising Digital Identification, LLC group. 12 characters; 4 alpha characters (company identification prefix) followed by 8 alphanumeric characters. (See [Ad-ID])"
-        case .UMID: return "See [SMPTE 330]"
-        case .ISAN8: return "**Deprecated** 8 byte. Use type 0x06, ISO 15706 binary encoding."
-        case .ISAN: return "12 byte. Formerly known as V-ISAN. ISO 15706-2 binary encoding (“versioned” ISAN). See [ISO 15706-2]."
-        case .TID: return "Tribune Media Systems Program identifier. 12 characters; 2 alpha characters followed by 10 numbers."
-        case .TI: return "AiringID (Formerly Turner ID), used to indicate a specific airing of a program that is unique within a network."
-        case .ADI: return "CableLabs metadata identifier as defined in Section 10.3.3.2."
-        case .EIDR: return "An EIDR (see [EIDR]) represented in Compact Binary encoding as defined in Section 2.1.1 in EIDR ID Format (see [EIDR ID FORMAT])"
-        case .ATSC: return "ATSC_content_identifier() structure as defined in [ATSC A/57B]."
-        case .MPU: return "Managed Private UPID structure as defined in section 10.3.3.3."
-        case .MID: return "Multiple UPID types structure as defined in section 10.3.3.4."
-        case .ADS: return "Advertising information. The specific usage is out of scope of this standard."
-        case .URI: return "Universal Resource Identifier (see [RFC 3986])."
-        case .UUID: return "Universally Unique Identifier (see [RFC 4112]). This segmentation type can be used instead of UIR"
-        }
-    }
-
-    public var debugDescription: String {
-        return "\(name): \(description)"
     }
 }
 

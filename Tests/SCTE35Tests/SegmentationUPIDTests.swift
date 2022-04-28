@@ -6,45 +6,56 @@
 //
 
 import XCTest
-import SCTE35
+@testable import SCTE35
 
 class SegmentationUPIDTests: XCTestCase {
-
-    let adIdCue = "/DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAAA3//AAApPWwDDEFCQ0QwMTIzNDU2SBAAAGgCL9A="
-    let umidCue = "/DBHAAAAAAAA///wBQb+AAAAAAAxAi9DVUVJAAAAA3+/BCAGCis0AQEBBQEBDSATAAAA0skDbI8ZU0OrcBTS1xi/2hEAAPUV9+0="
-    let isanCue = "/DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAABn//AAApPWwGDAAAAAA6jQAAAAAAABAAAPaArb4="
-    let tidCue = "/DAzAAAAAAAA///wBQb+AAAAAAAdAhtDVUVJAAAAA3+/BwxNVjAwMDQxNDY0MDARAAB2a6fC"
-    let airIdCue = "/DBhAAAAAAAA///wBQb+qM1E7QBLAhdDVUVJSAAArX+fCAgAAAAALLLXnTUCAAIXQ1VFSUgAACZ/nwgIAAAAACyy150RAAACF0NVRUlIAAAnf58ICAAAAAAsstezEAAAihiGnw=="
-    let adiCue = "/DBEAAAAAAAA///wBQb+AFJlwAAuAixDVUVJYgAFin+/CR1TSUdOQUw6My1zUTROZ0ZUME9qUHNHNFdxVVFvdzUAAEukzlg="
-    let eidrCue = "/DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAAA3//AAApPWwKDBR4+FrhALBoW4+xyBAAAGij1lQ="
-    let atscCue = "/DA4AAAAAAAA///wBQb+AAAAAAAiAiBDVUVJAAAAA3//AAApPWwLDADx7/9odW1hbjAxMhAAALdaWG4="
-    let mpuCue = "/DCSAAAAAAAAAP/wBQb/RgeVUgB8AhdDVUVJbs6+VX+/CAgAAAAABy0IxzELGQIXQ1VFSW7MmIh/vwgIAAABGDayFhE3AQECHENVRUluzw0If/8AABvLoAgIAAAAAActVhIwDBkCKkNVRUluzw02f78MG1JUTE4xSAEAAAAAMTM3NjkyMDI1NDQ5NUgxAAEAAGnbuXg="
-    let midCue = "/DA9AAAAAAAAAACABQb+0fha8wAnAiVDVUVJSAAAv3/PAAD4+mMNEQ4FTEEzMDkICAAAAAAuU4SBNAAAPIaCPw=="
-    let adsCue = "/DBUAAAAAAAA///wBQb+AAAAAAA+AjxDVUVJAAAAC3+/Di1BRFMtVVBJRDphYTg1YmJiNi01YzQzLTRiNmEtYmViYi1lZTNiMTNlYjc5OTkRAACV15uV"
-    let uriCue = "/DBZAAAAAAAA///wBQb+AAAAAABDAkFDVUVJAAAACn//AAApMuAPLXVybjp1dWlkOmFhODViYmI2LTVjNDMtNGI2YS1iZWJiLWVlM2IxM2ViNzk5ORAAAFz7UQA="
-
-    func testUserDefined() {
-        
-    }
-
     func testISCI() {
-
+        let isci = "ABCD1234"
+        guard let isciData = isci.data(using: .utf8) else {
+            XCTFail("Could not create data bytes from string")
+            return
+        }
+        let upid = SegmentationUPID(type: 0x02, length: isciData.count, relevantBits: BitConverter.bits(fromData: isciData))
+        XCTAssertEqual(upid?.info, SegmentationUPIDInformation.ISCI(isci))
+        XCTAssertEqual(upid?.type, 0x02)
     }
 
     func testAdID() {
-
+        let adId = "ABCD0001000H"
+        guard let adIdData = adId.data(using: .utf8) else {
+            XCTFail("Could not create data bytes from string")
+            return
+        }
+        let upid = SegmentationUPID(type: 0x03, length: adIdData.count, relevantBits: BitConverter.bits(fromData: adIdData))
+        XCTAssertEqual(upid?.info, SegmentationUPIDInformation.AdID(adId))
+        XCTAssertEqual(upid?.type, 0x03)
     }
 
     func testUMID() {
-
-    }
-
-    func testISAN8() {
-
+        let umId = "060A2B34.01010105.01010D20.13000000.D2C9036C.8F195343.AB7014D2.D718BFDA"
+        guard let umIdBits = BitConverter.bits(fromUMID: umId) else {
+            XCTFail("Could not get bits from UMID string")
+            return
+        }
+        let upid = SegmentationUPID(type: 0x04, length: 32, relevantBits: umIdBits)
+        XCTAssertEqual(upid?.info, SegmentationUPIDInformation.UMID(umId))
+        XCTAssertEqual(upid?.type, 0x04)
     }
 
     func testISAN() {
+        let isanTestString = "B159-D8FA-0124-0000-K"
+        guard let bits = BitConverter.bits(fromIsan: isanTestString) else { XCTFail("Could not create bit array from ISAN"); return }
+        let isan = SegmentationUPID(type: 0x05, length: 8, relevantBits: bits)
+        XCTAssertEqual(isan?.info, SegmentationUPIDInformation.ISAN(isanTestString))
+        XCTAssertEqual(isan?.type, 0x05)
+    }
 
+    func testVISAN() {
+        let isanTestString = "0123-0E00-D07A-0090-O-00A0-070F-G"
+        guard let bits = BitConverter.bits(fromIsan: isanTestString) else { XCTFail("Could not create bit array from ISAN"); return }
+        let isan = SegmentationUPID(type: 0x06, length: 12, relevantBits: bits)
+        XCTAssertEqual(isan?.info, SegmentationUPIDInformation.VISAN(isanTestString))
+        XCTAssertEqual(isan?.type, 0x06)
     }
 
     func testTID() {
