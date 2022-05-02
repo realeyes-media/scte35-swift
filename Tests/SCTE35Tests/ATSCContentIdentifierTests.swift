@@ -23,8 +23,6 @@ class ATSCContentIdentifierTests: XCTestCase {
         let uniqueForVal = UInt16(uniqueForBitString, radix: 2)
 
         let contentIdBitString = "01100010011100010101"
-        guard let contentIdBits = getBits(from: contentIdBitString) else { XCTFail("Couldn't get bits from string"); return }
-        let contentIdVal = BitConverter.hexString(fromBits: contentIdBits)
 
         let fullBitstring = tsidBitString + reservedBitString + endOfDayBitString + uniqueForBitString + contentIdBitString
         var bits = [Bit]()
@@ -37,7 +35,19 @@ class ATSCContentIdentifierTests: XCTestCase {
         XCTAssertEqual(atscId?.tsid, tsidVal)
         XCTAssertEqual(atscId?.endOfDay, endOfDayVal)
         XCTAssertEqual(atscId?.uniqueFor, uniqueForVal)
-        XCTAssertEqual(atscId?.contentId, contentIdVal)
+
+        guard let contentId = atscId?.contentId else {
+            XCTFail("contentId is nil")
+            return
+        }
+
+        let contentIdIntegerRep = withUnsafeBytes(of: contentId) {
+            return $0.load(as: Int.self)
+        }
+
+        guard let contentIdBits = getBits(from: contentIdBitString) else { XCTFail("Couldn't get bits from string"); return }
+        let expectedContentIdInt = BitConverter.integer(fromBits: contentIdBits)
+        XCTAssertEqual(contentIdIntegerRep, expectedContentIdInt)
     }
 
     func testInitFromBitsFailsLongBitFormat() {
@@ -97,14 +107,5 @@ class ATSCContentIdentifierTests: XCTestCase {
         }
         XCTAssertEqual(bits, encodedBits)
     }
-
-    private func getBits(from string: String) -> [Bit]? {
-        var bits = [Bit]()
-        for b in string {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { return nil }
-            bits.append(bit)
-        }
-        return bits
-    }
-
+    
 }
