@@ -1,5 +1,5 @@
 //
-//  ISANTests.swift
+//  ISO7064Tests.swift
 //  
 //
 //  Created by Jonathan Bachmann on 4/27/22.
@@ -8,16 +8,21 @@
 import XCTest
 @testable import SCTE35
 
-class ISANTests: XCTestCase {
+class ISO7064Tests: XCTestCase {
+    func testCheckCharFromHexChars() {
+        let hexString = "B159D8FA01240000"
+        XCTAssertEqual(ISO7064.calculateMod3637CheckCharacter(fromHexadecimals: Array(hexString)), "K")
+    }
+
     func testIsanNoVersionFirstCheckDigit() {
         let isanTestString = "B159-D8FA-0124-0000-K"
         let isanHexDecimals = isanTestString.replacingOccurrences(of: "-", with: "").dropLast()
         let expectedCheckChar = Character(String(isanTestString.suffix(1)))
         let isanDecimals: [Int] = isanHexDecimals.compactMap { isanChar in
-            return ISAN.alphanumericChars.firstIndex(of: isanChar)
+            return ISO7064.alphanumericCharacterSet.firstIndex(of: isanChar)
         }
         guard isanDecimals.count == isanHexDecimals.count else { XCTFail("Could not create a valid isan decimal array"); return }
-        let checkChar = ISAN.calculateMod3637CheckCharacter(from: isanDecimals)
+        let checkChar = ISO7064.calculateMod3637CheckCharacter(fromDecimals: isanDecimals)
         XCTAssertEqual(expectedCheckChar, checkChar)
     }
 
@@ -35,18 +40,18 @@ class ISANTests: XCTestCase {
         // Test first check digit calc
         let rootEpisodeHexDecimals = allIsanHexDecimals.prefix(16)
         var isanDecimals: [Int] = rootEpisodeHexDecimals.compactMap { isanChar in
-            return ISAN.alphanumericChars.firstIndex(of: isanChar)
+            return ISO7064.alphanumericCharacterSet.firstIndex(of: isanChar)
         }
         guard isanDecimals.count == rootEpisodeHexDecimals.count else { XCTFail("Could not create a valid isan decimal array"); return }
-        var checkChar = ISAN.calculateMod3637CheckCharacter(from: isanDecimals)
+        var checkChar = ISO7064.calculateMod3637CheckCharacter(fromDecimals: isanDecimals)
         XCTAssertEqual(expectedFirstCheckDigit, checkChar)
 
         // Test second check digit calc
         isanDecimals =  allIsanHexDecimals.compactMap { isanChar in
-            return ISAN.alphanumericChars.firstIndex(of: isanChar)
+            return ISO7064.alphanumericCharacterSet.firstIndex(of: isanChar)
         }
         guard isanDecimals.count == allIsanHexDecimals.count else { XCTFail("Could not create a valid isan decimal array"); return }
-        checkChar = ISAN.calculateMod3637CheckCharacter(from: isanDecimals)
+        checkChar = ISO7064.calculateMod3637CheckCharacter(fromDecimals: isanDecimals)
         XCTAssertEqual(expectedSecondCheckDigit, checkChar)
     }
 }
