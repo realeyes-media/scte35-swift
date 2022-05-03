@@ -21,6 +21,7 @@ public enum SCTE35ParsingError: Error {
     case unableToParseDescriptor(type: DescriptorType)
     case invalidHexString
     case invalidStringAsUtf8
+    case couldNotDecodeBitsToExpectedType
 }
 
 public enum CommandType {

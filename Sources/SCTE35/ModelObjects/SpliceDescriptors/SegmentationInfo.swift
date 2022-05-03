@@ -362,7 +362,7 @@ public struct SegmentationUPID: Equatable {
     public var info: SegmentationUPIDInformation?
 
     init?(type: Int, length: Int, relevantBits: [Bit]) {
-        guard type <= 0xFF else { return nil }
+        guard type <= 0x10 else { return nil }
         self.type = UInt8(type)
         self.length = UInt8(length)
 
@@ -403,8 +403,8 @@ public struct SegmentationUPID: Equatable {
 extension SegmentationUPID: BitEncodable {
     func encode() throws -> [Bit] {
         var bits = [Bit]()
-        bits.append(contentsOf: BitConverter.bits(fromByte: type))
-        bits.append(contentsOf: BitConverter.bits(fromByte: length))
+        bits.append(contentsOf: BitConverter.bits(from: type))
+        bits.append(contentsOf: BitConverter.bits(from: length))
 
         switch info {
         case .none:
@@ -415,8 +415,7 @@ extension SegmentationUPID: BitEncodable {
 
         case .ISCI(let value), .AdID(let value), .UMID(let value), .VISAN(let value),
                 .ISAN(let value), .TID(let value), .TI(let value), .ADI(let value),
-                .EIDR(let value), .MPU(let value), .ADS(let value), .URI(let value),
-                .UUID(let value):
+                .EIDR(let value), .MPU(let value), .ADS(let value), .URI(let value), .UUID(let value):
             guard let stringData = value.data(using: .utf8) else { throw SCTE35ParsingError.invalidStringAsUtf8 }
             let stringBits = BitConverter.bits(fromData: stringData)
             bits.append(contentsOf: stringBits)
@@ -466,132 +465,101 @@ public enum SegmentationUPIDInformation: Equatable {
         switch type {
         case 0x01:
             self = .userDefined(UInt(BitConverter.integer(fromBits: relevantBits)))
+
         case 0x02:
-            guard let string = BitConverter.string(fromBits: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 64,
+                let string = BitConverter.string(fromBits: relevantBits)
+            else { return nil }
             self = .ISCI(string)
+
         case 0x03:
-            guard let adId = BitConverter.adIdString(from: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 96,
+                let adId = BitConverter.adIdString(from: relevantBits)
+            else { return nil }
             self = .AdID(adId)
+
         case 0x04:
-            guard let smtpe = BitConverter.umidString(fromBits: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 256,
+                let smtpe = BitConverter.umidString(fromBits: relevantBits)
+            else { return nil }
             self = .UMID(smtpe)
+
         case 0x05:
-            guard let isan = BitConverter.isanString(fromBits: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 64,
+                let isan = BitConverter.isanString(fromBits: relevantBits)
+            else { return nil }
             self = .ISAN(isan)
+
         case 0x06:
-            guard let isan = BitConverter.isanString(fromBits: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 96,
+                let isan = BitConverter.isanString(fromBits: relevantBits)
+            else { return nil }
             self = .VISAN(isan)
+
         case 0x07:
-            guard let tid = BitConverter.tidString(from: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 96,
+                let tid = BitConverter.tidString(from: relevantBits)
+            else { return nil }
             self = .TID(tid)
+
         case 0x08:
-            self = .TI(BitConverter.hexString(fromBits: relevantBits))
+            guard
+                relevantBits.count == 64,
+                let ti = BitConverter.hexString(fromBits: relevantBits)
+            else { return nil }
+            self = .TI(ti)
+
         case 0x09:
             guard let adi = BitConverter.adiString(from: relevantBits) else { return nil }
             self = .ADI(adi)
+
         case 0x0A:
-            guard let eidr = BitConverter.eidrString(fromBits: relevantBits) else { return nil }
+            guard
+                relevantBits.count == 96,
+                let eidr = BitConverter.eidrString(fromBits: relevantBits)
+            else { return nil }
             self = .EIDR(eidr)
+
         case 0x0B:
             guard let atsc = ATSCContentIdentifier(from: relevantBits) else { return nil }
             self = .ATSC(atsc)
+
         case 0x0C:
             guard let mpu = BitConverter.string(fromBits: relevantBits) else { return nil }
             self = .MPU(mpu)
+
         case 0x0D:
             guard
                 let multiUpids = SegmentationUPID.getMultipleUpids(from: relevantBits),
                 multiUpids.count > 0
             else { return nil }
             self = .MID(multiUpids)
+
         case 0x0E:
             guard let ads = BitConverter.string(fromBits: relevantBits) else { return nil }
             self = .ADS(ads)
+
         case 0x0F:
             guard let uri = BitConverter.string(fromBits: relevantBits) else { return nil }
             self = .URI(uri)
+
         case 0x10:
-            self = .UUID(BitConverter.hexString(fromBits: relevantBits))
+            guard
+                relevantBits.count == 128,
+                let uuid = BitConverter.hexString(fromBits: relevantBits) else { return nil }
+            self = .UUID(uuid)
+
         default:
             return nil
         }
     }
 }
-
-///// Additional Information that may be associated with Segmentation UPID
-//public struct SegmentationUPIDInformation {
-//    /// These have been tested against several, but not all of SegmentationUPID.type
-//    /// Feel free to fork this repo and add additional decoding
-//    public var string: String?
-//    public var array: [SegmentationUPID]?
-//
-//    init?(type: Int, relevantBits: [Bit]) {
-//        switch type {
-//        case 0x03:
-//            guard let adIdString = BitConverter.adIdString(from: relevantBits) else { return nil }
-//            self.string = adIdString
-//            self.array = nil
-//        case 0x04:
-//            guard let smpteString = BitConverter.smpteString(fromBits: relevantBits) else { return nil }
-//            self.string = smpteString
-//            self.array = nil
-//        case 0x06:
-//            guard let isanString = BitConverter.isanString(fromBits: relevantBits) else { return nil }
-//            self.string = isanString
-//            self.array = nil
-//        case 0x07:
-//            guard let tidString = BitConverter.tidString(from: relevantBits) else { return nil }
-//            self.string = tidString
-//            self.array = nil
-//        case 0x08:
-//            self.string = BitConverter.hexString(fromBits: relevantBits)
-//            self.array = nil
-//        case 0x09:
-//            guard let adiString = BitConverter.adiString(from: relevantBits) else { return nil }
-//            self.string = adiString
-//            self.array = nil
-//        case 0x0A:
-//            guard let eidrString = BitConverter.eidrString(fromBits: relevantBits) else { return nil }
-//            self.string = eidrString
-//            self.array = nil
-//        case 0x0B:
-//            guard
-//                let atscId = ATSCContentIdentifier(from: relevantBits),
-//                let atscJSON = try? JSONEncoder().encode(atscId),
-//                let atscString = String(bytes: atscJSON, encoding: .utf8)
-//            else { return nil }
-//            self.string = atscString
-//            self.array = nil
-//        case 0x0D:
-//            self.string = nil
-//            self.array = []
-//
-//            var bits = relevantBits
-//            while bits.count > 0 {
-//                guard bits.count >= 16 else { return nil }
-//                let upidTypeRange = 0..<8
-//                let upidType = BitConverter.integer(fromBits: Array(bits[upidTypeRange]))
-//                let upidLengthRange = 8..<16
-//                let upidLengthInBytes = BitConverter.integer(fromBits: Array(bits[upidLengthRange]))
-//
-//
-//                let startIndex = 16
-//                let endIndex = 16 + (upidLengthInBytes * 8)
-//                guard bits.count >= endIndex else { return nil }
-//                let segmentationBitsRange = startIndex..<endIndex
-//                let upidBits = Array(bits[segmentationBitsRange])
-//                guard let segmentationUPID = SegmentationUPID(type: upidType, length: upidLengthInBytes, relevantBits: upidBits) else {
-//                    return nil
-//                }
-//                self.array?.append(segmentationUPID)
-//                bits.removeSubrange(0..<endIndex)
-//            }
-//        default:
-//            self.string = BitConverter.string(fromBits: relevantBits) ?? nil
-//            self.array = nil
-//        }
-//    }
-//}
 
 public enum SegmentationTypeID {
     case notIndicated

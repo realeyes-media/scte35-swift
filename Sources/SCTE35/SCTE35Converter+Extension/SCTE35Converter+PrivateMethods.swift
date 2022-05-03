@@ -181,12 +181,12 @@ extension SCTE35Converter {
         return descriptors
     }
 
-    func getCRCs(_ bitsArray: [Bit], isEncryptedPacketOn: Bool) -> (crc32: String, ecrc32: String?) {
+    func getCRCs(_ bitsArray: [Bit], isEncryptedPacketOn: Bool) throws -> (crc32: String, ecrc32: String?) {
         let crc32EndLocation = bitsArray.count
         let crc32StartLocation = crc32EndLocation - 32
         let crcRange = crc32StartLocation..<crc32EndLocation
         let crc32Bits = Array(bitsArray[crcRange])
-        let crc32 = BitConverter.hexString(fromBits: crc32Bits)
+        guard let crc32 = BitConverter.hexString(fromBits: crc32Bits) else { throw SCTE35ParsingError.couldNotDecodeBitsToExpectedType }
 
         let ecrc32: String?
         if isEncryptedPacketOn {

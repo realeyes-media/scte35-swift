@@ -78,9 +78,14 @@ public struct SCTE35Converter {
             throw error
         }
 
-        let crcStrings = getCRCs(bitsArray, isEncryptedPacketOn: isEncryptedPacketOn)
+        let crcStrings = try getCRCs(bitsArray, isEncryptedPacketOn: isEncryptedPacketOn)
 
-        return SpliceInfoSection(tableID: 252, isSectionSyntaxIndicatorOn: isSectionSyntaxIndicatorOn, isPrivateIndicatorOn: isPrivateIndicatorOn, sectionLength: remainingSectionLength, protocolVersion: protocolVersion, hasEncryptedPacket: isEncryptedPacketOn, encryptionAlgorithm: encryptionAlgorithm, ptsAdjustment: ptsAdjustment, cwIndex: cwIndex, tier: tier, spliceCommandLength: spliceCommandLengthInBytes, spliceCommandType: spliceCommandType, spliceCommand: spliceCommand, descriptorLoopLength: descriptorInfo.descriptorLoopLength, spliceDescriptors: spliceDescriptors, crc32: crcStrings.crc32, ecrc32: crcStrings.ecrc32)
+        return SpliceInfoSection(tableID: 252, isSectionSyntaxIndicatorOn: isSectionSyntaxIndicatorOn, isPrivateIndicatorOn: isPrivateIndicatorOn,
+                                 sectionLength: remainingSectionLength, protocolVersion: protocolVersion, hasEncryptedPacket: isEncryptedPacketOn,
+                                 encryptionAlgorithm: encryptionAlgorithm, ptsAdjustment: ptsAdjustment, cwIndex: cwIndex, tier: tier,
+                                 spliceCommandLength: spliceCommandLengthInBytes, spliceCommandType: spliceCommandType, spliceCommand: spliceCommand,
+                                 descriptorLoopLength: descriptorInfo.descriptorLoopLength, spliceDescriptors: spliceDescriptors,
+                                 crc32: crcStrings.crc32, ecrc32: crcStrings.ecrc32)
     }
 
     /// Example of a valid hexString: 0xFC3048000000000000FFFFF00506FE932E380B00320217435545494800000A7F9F0808000000002CA0A1E3180000021743554549480000097F9F0808000000002CA0A18A110000B4217EB0

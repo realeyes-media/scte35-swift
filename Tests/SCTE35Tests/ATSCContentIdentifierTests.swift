@@ -25,12 +25,7 @@ class ATSCContentIdentifierTests: XCTestCase {
         let contentIdBitString = "01100010011100010101"
 
         let fullBitstring = tsidBitString + reservedBitString + endOfDayBitString + uniqueForBitString + contentIdBitString
-        var bits = [Bit]()
-        for b in fullBitstring {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
-            bits.append(bit)
-        }
-
+        guard let bits = getBits(from: fullBitstring) else { XCTFail("Couldn't create bit array from bit string"); return }
         let atscId = ATSCContentIdentifier(from: bits)
         XCTAssertEqual(atscId?.tsid, tsidVal)
         XCTAssertEqual(atscId?.endOfDay, endOfDayVal)
@@ -51,13 +46,8 @@ class ATSCContentIdentifierTests: XCTestCase {
     }
 
     func testInitFromBitsFailsLongBitFormat() {
-        var bits = [Bit]()
         // Create bit string that is longer than 242 bytes
-        for b in String(repeating: "0", count: 242*9) {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
-            bits.append(bit)
-        }
-
+        guard let bits = getBits(from: String(repeating: "0", count: 242*9)) else { XCTFail("Couldn't create bit array from bit string"); return }
         XCTAssertNil(ATSCContentIdentifier(from: bits))
     }
 
@@ -67,14 +57,8 @@ class ATSCContentIdentifierTests: XCTestCase {
         let endOfDayBitString = "00010"
         let uniqueForBitString = "001000110"
         let contentIdBitString = ""
-
         let fullBitstring = tsidBitString + reservedBitString + endOfDayBitString + uniqueForBitString + contentIdBitString
-        var bits = [Bit]()
-        for b in fullBitstring {
-            guard let bit = Bit(rawValue: (b == "1" ? 1 : 0)) else { XCTFail("Couldn't create Bit instance from raw value"); return }
-            bits.append(bit)
-        }
-
+        guard let bits = getBits(from: fullBitstring) else { XCTFail("Couldn't create bit array from bit string"); return }
         XCTAssertNil(ATSCContentIdentifier(from: bits))
     }
 

@@ -198,7 +198,7 @@ class ValidCueTests: XCTestCase {
             XCTAssertNil(additionalInfo.pidComponents)
             XCTAssertEqual(additionalInfo.segmentationDuration, 2702700)
             XCTAssertEqual(additionalInfo.segmentationUPID.type, 6)
-            XCTAssertEqual(additionalInfo.segmentationUPID.name, "ISAN")
+            XCTAssertEqual(additionalInfo.segmentationUPID.name, "V-ISAN")
             XCTAssertEqual(additionalInfo.segmentationUPID.description, "Formerly known as V-ISAN. ISO 15706-2 binary encoding (“versioned” ISAN). See [ISO 15706-2].")
 
             guard let upidInfo = additionalInfo.segmentationUPID.info else {
@@ -209,8 +209,8 @@ class ValidCueTests: XCTestCase {
             // TODO: - these question marks are placeholders until we can write an algorithm that follows ISO 7064 mod 37, 36 standards
             // Examples online are few and wildly inconsistent
             switch upidInfo {
-            case .ISAN(let string):
-                XCTAssertEqual(string, "153C-7365-B36F-844C-?-8734-9420-?")
+            case .VISAN(let string):
+                XCTAssertEqual(string, "153C-7365-B36F-844C-7-8734-9420-T")
             default:
                 XCTFail("Incorrect upid type: \(upidInfo)")
             }
@@ -362,7 +362,7 @@ class ValidCueTests: XCTestCase {
 
             switch upidInfo {
             case .TI(let string):
-                XCTAssertEqual(string, "0x2CA0A1E3")
+                XCTAssertEqual(string, "0x000000002CA0A1E3")
             default:
                 XCTFail("Incorrect upid type: \(upidInfo)")
             }
@@ -411,7 +411,7 @@ class ValidCueTests: XCTestCase {
 
             switch upidInfo {
             case .TI(let string):
-                XCTAssertEqual(string, "0x2CA0A18A")
+                XCTAssertEqual(string, "0x000000002CA0A18A")
             default:
                 XCTFail("Incorrect upid type: \(upidInfo)")
             }
@@ -485,7 +485,7 @@ class ValidCueTests: XCTestCase {
             // Examples online are few and wildly inconsistent
             switch upidInfo {
             case .EIDR(let string):
-                XCTAssertEqual(string, "10.5240/F85A-E100-B068-5B8F-B1C8-?")
+                XCTAssertEqual(string, "10.5240/F85A-E100-B068-5B8F-B1C8-T")
             default:
                 XCTFail("Incorrect upid type: \(upidInfo)")
             }
@@ -662,7 +662,7 @@ class ValidCueTests: XCTestCase {
                 guard let secondUPID = upids.last?.info else { XCTFail("Expected a 2 element UPID array"); return }
                 switch secondUPID {
                 case .TI(let string):
-                    XCTAssertEqual(string, "0x2E538481")
+                    XCTAssertEqual(string, "0x000000002E538481")
                 default:
                     XCTFail("Incorrect upid type: \(secondUPID)")
                 }
@@ -816,7 +816,7 @@ class ValidCueTests: XCTestCase {
 
             switch upidInfo {
             case .TI(let string):
-                XCTAssertEqual(string, "0x2CA0A18A")
+                XCTAssertEqual(string, "0x000000002CA0A18A")
             default:
                 XCTFail("Incorrect upid type: \(upidInfo)")
             }

@@ -9,9 +9,11 @@
 import Foundation
 
 class BitConverter {
-    /// Will return an array of 8 bits
-    /// i.e. input = 15, output = [0, 0, 0, 0, 1, 1, 1, 1]
-    static func bits(fromByte byte: UInt8) -> [Bit] {
+    /**
+     Will return an array of 8 bits
+     i.e. input = 15, output = [0, 0, 0, 0, 1, 1, 1, 1]
+     */
+    static func bits(from byte: UInt8) -> [Bit] {
         var byte = byte
         var bits = [Bit](repeating: .zero, count: 8)
         for i in 0..<8 {
@@ -33,7 +35,7 @@ class BitConverter {
         var bits: [Bit] = []
         withUnsafeBytes(of: value) {
             for bite in $0.reversed() {
-                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+                bits.append(contentsOf: BitConverter.bits(from: bite))
             }
         }
         return bits
@@ -49,7 +51,7 @@ class BitConverter {
         var bits: [Bit] = []
         withUnsafeBytes(of: value) {
             for bite in $0.reversed() {
-                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+                bits.append(contentsOf: BitConverter.bits(from: bite))
             }
         }
         return bits
@@ -67,7 +69,7 @@ class BitConverter {
         var bits: [Bit] = []
         withUnsafeBytes(of: value) {
             for bite in $0.reversed() {
-                bits.append(contentsOf: BitConverter.bits(fromByte: bite))
+                bits.append(contentsOf: BitConverter.bits(from: bite))
             }
         }
         return bits.suffix(bitArraySize)
@@ -76,7 +78,7 @@ class BitConverter {
     static func bits(fromData data: Data) -> [Bit] {
         var bits: [Bit] = []
         for byte in data {
-            let x = BitConverter.bits(fromByte: byte)
+            let x = BitConverter.bits(from: byte)
             bits.append(contentsOf: x)
         }
         return bits
@@ -142,8 +144,8 @@ class BitConverter {
         guard hexParts.count == 8 else { return nil }
 
         var bits = [Bit]()
-        for hexString in hexParts {
-            guard let integer = UInt32(hexString, radix: 16) else {
+        for hexChar in hexParts {
+            guard let integer = UInt32(hexChar, radix: 16) else {
                 return nil
             }
             bits.append(contentsOf: BitConverter.bits(from: integer))
@@ -162,28 +164,27 @@ class BitConverter {
             return nil
         }
 
-        let nibbles = stride(from: 0, to: bits.count, by: 4).map { (last) -> [Bit] in
-            return Array(bits[last..<last+4])
-        }
-
-        var isanDigits = [Int]()
-        for nibble in nibbles {
+        var isanIntegers = [Int]()
+        for index in stride(from: bits.startIndex, to: bits.endIndex, by: 4) {
+            let nibble = Array(bits[index..<index+4])
             let intValue = BitConverter.integer(fromBits: nibble)
-            isanDigits.append(intValue)
+            isanIntegers.append(intValue)
         }
 
         // There must always be a first check character for the root and episode segments
-        guard let firstCheckChar: Character = ISAN.calculateMod3637CheckCharacter(from: Array(isanDigits.prefix(16))) else { return nil }
+        guard let firstCheckChar: Character = ISO7064.calculateMod3637CheckCharacter(fromDecimals: Array(isanIntegers.prefix(16))) else { return nil }
         // If there is no version, there is no second check character
-        let secondCheckChar: Character? = containsVersion ? ISAN.calculateMod3637CheckCharacter(from: isanDigits) : nil
+        let secondCheckChar: Character? = containsVersion ? ISO7064.calculateMod3637CheckCharacter(fromDecimals: isanIntegers) : nil
 
+        // Build ISAN string without check chars
         var isanString = ""
-        for (index, digit) in isanDigits.enumerated() {
+        for (index, int) in isanIntegers.enumerated() {
             if index != 0 && index % 4 == 0 { isanString.append("-") }
-            let char = String(format: "%01X", digit)
+            let char = String(format: "%01X", int)
             isanString.append(char)
         }
 
+        // Add in check chars
         if !containsVersion {
             isanString.append("-\(firstCheckChar)")
         } else {
@@ -203,24 +204,21 @@ class BitConverter {
         } else if isan.count == 21 {
             containsVersion =  false
         } else {
-            // character count does not represent an ISAN string
+            // character count does not meet requirements for ISAN string
             return nil
         }
 
-        // Create array of hexadecimals with check digits removed
-        var isanHexDecimals = isan.replacingOccurrences(of: "-", with: "").dropLast()
+        // remove check digits from isan string
+        var isanHexDecimals = isan.replacingOccurrences(of: "-", with: "").dropLast() // dropLast removes the 2nd check digit
         if containsVersion {
             let firstCheckDigitIndex = isanHexDecimals.index(isanHexDecimals.startIndex, offsetBy: 16)
             isanHexDecimals.remove(at: firstCheckDigitIndex)
         }
 
-        let isanDecimals: [Int] = isanHexDecimals.compactMap { isanChar in
-            return ISAN.alphanumericChars.firstIndex(of: isanChar)
-        }
-
         var bits = [Bit]()
-        for decimal in isanDecimals {
-            bits.append(contentsOf: BitConverter.bits(from: decimal, bitArraySize: 4))
+        for hexVal in isanHexDecimals {
+            guard let alphaNumCharVal = ISO7064.alphanumericCharacterSet.firstIndex(of: hexVal) else { return nil }
+            bits.append(contentsOf: BitConverter.bits(from: alphaNumCharVal, bitArraySize: 4))
         }
 
         return bits
@@ -229,29 +227,78 @@ class BitConverter {
     static func eidrString(fromBits bits: [Bit]) -> String? {
         guard bits.count == 96 else { return nil }
         let firstTwoBytes = Array(bits[0..<16])
-        let integerValue = BitConverter.integer(fromBits: firstTwoBytes)
-        let nibbles = stride(from: 16, to: bits.count, by: 4).map { (last) -> [Bit] in
-            return Array(bits[last..<last+4])
+        let subPrefix = BitConverter.integer(fromBits: firstTwoBytes)
+
+        var eidrIntegers = [Int]()
+        for index in stride(from: bits.startIndex.advanced(by: 16), to: bits.endIndex, by: 4) {
+            let nibble = Array(bits[index..<index+4])
+            let intValue = BitConverter.integer(fromBits: nibble)
+            eidrIntegers.append(intValue)
         }
 
-        var stringToReturn = "10.\(integerValue)/"
-        let indicesForDash = Set<Int>(arrayLiteral: 3, 7, 11, 15)
-        for (index, nibble) in nibbles.enumerated() {
-            let intValue = BitConverter.integer(fromBits: nibble)
-            let char = String(format: "%01X", intValue)
-            stringToReturn.append(char)
-            if indicesForDash.contains(index) {
-                stringToReturn.append("-")
-            }
+        guard let checkChar = ISO7064.calculateMod3637CheckCharacter(fromDecimals: eidrIntegers) else { return nil }
+
+        // Build EIDR string
+        var eidrString = "10.\(subPrefix)/"
+        for (index, int) in eidrIntegers.enumerated() {
+            if index != 0 && index % 4 == 0 { eidrString.append("-") }
+            let char = String(format: "%01X", int)
+            eidrString.append(char)
         }
-        // TODO: - use page 9 of SCTE Documentation [EIDR ID FORMAT] to find check character
-        return stringToReturn + "-?"
+        eidrString.append("-\(checkChar)")
+
+        return eidrString
     }
 
-    static func hexString(fromBits bits: [Bit]) -> String {
-        let binaryString = bits.reduce("") { return $0 + $1.description }
-        guard let binaryAsInt = Int(binaryString, radix: 2) else { return "" }
-        return "0x" + String(binaryAsInt, radix: 16).uppercased()
+    static func bits(fromEidr eidr: String) -> [Bit]? {
+        let strippedString = eidr.replacingOccurrences(of: "10.", with: "")
+        let eidrParts = strippedString.split(separator: "/")
+        guard
+            eidrParts.count == 2,
+            let subPrefix = eidrParts.first,
+            let subPrefixUInt16 = UInt16(subPrefix, radix: 10),
+            let suffix = eidrParts.last
+        else { return nil }
+
+        // get only the hex characters of the DOI suffix, removing the trailing check char
+        let eidrHexChars = suffix.replacingOccurrences(of: "-", with: "").dropLast()
+
+        var bits = BitConverter.bits(from: subPrefixUInt16)
+        for hexVal in eidrHexChars {
+            guard let alphaNumCharVal = ISO7064.alphanumericCharacterSet.firstIndex(of: hexVal) else { return nil }
+            bits.append(contentsOf: BitConverter.bits(from: alphaNumCharVal, bitArraySize: 4))
+        }
+
+        guard bits.count == 96 else { return nil }
+
+        return bits
+    }
+
+    static func hexString(fromBits bits: [Bit]) -> String? {
+        guard bits.count % 4 == 0 else { return nil }
+
+        var hexString = ""
+        for index in stride(from: bits.startIndex, to: bits.endIndex, by: 4) {
+            let nibble = Array(bits[index..<index+4])
+            let intValue = BitConverter.integer(fromBits: nibble)
+            let char = String(format: "%01X", intValue)
+            hexString.append(char)
+        }
+        return "0x\(hexString)"
+    }
+
+    static func bits(fromHexString hexString: String) -> [Bit]? {
+        let hexCharSet = "0123456789ABCDEF"
+        let rawHexString = hexString.uppercased().replacingOccurrences(of: "0X", with: "")
+        var bits = [Bit]()
+        for char in rawHexString {
+            guard
+                hexCharSet.contains(char),
+                let intValue = Int(String(char), radix: 16)
+            else { return nil }
+            bits.append(contentsOf: BitConverter.bits(from: intValue, bitArraySize: 4))
+        }
+        return bits
     }
 
     static func convertToBase64String(hexString: String) -> String? {
@@ -326,8 +373,6 @@ class BitConverter {
 
     // CableLabs metadata identifier
     static func adiString(from bits: [Bit]) -> String? {
-        // convert bits to characters
-        // split string by ":" and remove spaces
         guard let decodedString = BitConverter.string(fromBits: bits) else { return nil }
 
         // Extract the parts of the adi UPID and check that they conform to some of the rules specified in the `CableLabs metadata identifier` section
