@@ -93,6 +93,58 @@ class ConverterTests: XCTestCase {
         XCTAssertEqual(bitsAsString, validCuesBinaryString)
     }
 
+    func testDataFromBits() {
+        let bits: [Bit] = [
+            .zero, .zero, .zero, .zero,
+            .zero, .zero, .zero, .one,
+            .zero, .zero, .one, .zero,
+            .zero, .zero, .one, .one,
+            .zero, .one, .zero, .zero,
+            .zero, .one, .zero, .one,
+            .zero, .one, .one, .zero,
+            .zero, .one, .one, .one,
+            .one, .zero, .zero, .zero,
+            .one, .zero, .zero, .one,
+            .one, .zero, .one, .zero,
+            .one, .zero, .one, .one,
+            .one, .one, .zero, .zero,
+            .one, .one, .zero, .one,
+            .one, .one, .one, .zero,
+            .one, .one, .one, .one,
+        ]
+
+        let data = BitConverter.data(from: bits)
+        XCTAssertEqual(data.count, 8)
+        var bitIndex = 0
+        for bite in data {
+            XCTAssertEqual(UInt8(bite), UInt8(BitConverter.integer(fromBits: Array(bits[bitIndex..<bitIndex+8]))))
+            bitIndex += 8
+        }
+    }
+
+    func testDataFromBitsByteAlignedPadded() {
+        let bits: [Bit] = [
+            .zero, .zero, .one, .one,
+            .zero, .one, .zero, .zero,
+            .zero, .one, .zero, .one,
+            .zero, .one, .one, .zero,
+            .zero, .one, .one, .one,
+            .one, .zero, .zero, .zero,
+            .one, .zero, .zero, .one,
+            .one, .zero, .one, .zero,
+            .one, .zero, .one, .one,
+            .one, .one, .zero, .zero,
+            .one, .one, .zero, .one,
+            .one, .one, .one, .zero,
+            .one, .one, .one, .one,
+        ]
+
+        let data = BitConverter.data(from: bits)
+        let integerFromData = withUnsafeBytes(of: data) { $0.load(as: Int.self)  }
+        let integerFromBits = BitConverter.integer(fromBits: bits)
+        XCTAssertEqual(integerFromData, integerFromBits)
+    }
+
     func testIntegerFromBits() {
         let bits: [Bit] = [.one, .zero, .zero, .one, .zero]
         let expectedValue = 18

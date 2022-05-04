@@ -410,7 +410,7 @@ extension SegmentationUPID: BitEncodable {
         case .none:
             break
         case .userDefined(let value):
-            let userDefinedBits = BitConverter.bits(from: Int(value), bitArraySize: Int(length*8))
+            let userDefinedBits = BitConverter.bits(fromData: value)
             bits.append(contentsOf: userDefinedBits)
 
         case .ISCI(let value), .AdID(let value), .UMID(let value), .VISAN(let value),
@@ -444,7 +444,7 @@ extension SegmentationUPID: BitEncodable {
 }
 
 public enum SegmentationUPIDInformation: Equatable {
-    case userDefined(UInt)
+    case userDefined(Data)
     case ISCI(String)
     case AdID(String)
     case UMID(String)
@@ -464,7 +464,7 @@ public enum SegmentationUPIDInformation: Equatable {
     init?(type: Int, relevantBits: [Bit]) {
         switch type {
         case 0x01:
-            self = .userDefined(UInt(BitConverter.integer(fromBits: relevantBits)))
+            self = .userDefined(BitConverter.data(from: relevantBits))
 
         case 0x02:
             guard

@@ -9,6 +9,31 @@ import XCTest
 @testable import SCTE35
 
 class SegmentationUPIDTests: XCTestCase {
+    func testUserDefined() {
+        let bits: [Bit] = [
+            .zero, .zero, .zero, .zero,
+            .zero, .zero, .zero, .one,
+            .zero, .zero, .one, .zero,
+            .zero, .zero, .one, .one,
+            .zero, .one, .zero, .zero,
+            .zero, .one, .zero, .one,
+            .zero, .one, .one, .zero,
+            .zero, .one, .one, .one,
+            .one, .zero, .zero, .zero,
+            .one, .zero, .zero, .one,
+            .one, .zero, .one, .zero,
+            .one, .zero, .one, .one,
+            .one, .one, .zero, .zero,
+            .one, .one, .zero, .one,
+            .one, .one, .one, .zero,
+            .one, .one, .one, .one,
+        ]
+        let upid = SegmentationUPID(type: 0x01, length: bits.count/8, relevantBits: bits)
+        let data = BitConverter.data(from: bits)
+        XCTAssertEqual(upid?.info, SegmentationUPIDInformation.userDefined(data))
+        XCTAssertEqual(upid?.type, 0x01)
+    }
+
     func testISCI() {
         let isci = "ABCD1234"
         guard let isciData = isci.data(using: .utf8) else {

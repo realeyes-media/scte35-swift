@@ -84,6 +84,35 @@ class BitConverter {
         return bits
     }
 
+    /**
+     Convert bit array into a `Data` instance
+
+     Bit array must be stored as most significant bit first
+
+     This method will determine the endian-ness of the current system to ensure
+     byte ordering is correct.
+     */
+    static func data(from bits: [Bit]) -> Data {
+        var paddedBits = bits
+        let bitRemainder = bits.count % 8
+        if bitRemainder != 0 {
+            paddedBits.insert(contentsOf: [Bit](repeating: .zero, count: 8 - bitRemainder), at: 0)
+        }
+
+        var data = Data(capacity: paddedBits.count/8)
+        for index in stride(from: paddedBits.startIndex, to: paddedBits.endIndex, by: 8) {
+            let bite = Array(paddedBits[index..<index+8])
+            let uint8Val = UInt8(BitConverter.integer(fromBits: bite))
+            if CFByteOrderGetCurrent() == CFByteOrder(CFByteOrderBigEndian.rawValue) {
+                data.append(uint8Val)
+            } else if CFByteOrderGetCurrent() == CFByteOrder(CFByteOrderLittleEndian.rawValue) {
+                data.insert(uint8Val, at: 0)
+            }
+        }
+
+        return data
+    }
+
     static func integer(fromBits bits: [Bit]) -> Int {
         var multiplier = 1
         var total = 0
