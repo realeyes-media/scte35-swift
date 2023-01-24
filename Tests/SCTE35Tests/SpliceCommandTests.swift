@@ -11,15 +11,14 @@ import XCTest
 
 class SpliceCommandTests: XCTestCase {
 
-    let spliceInsertCue = "/DAvAAAAAAAAAP///wViAAWKf+//CXVCAv4AUmXAAzUAAAAKAAhDVUVJADgyMWLvc/g="
+    let spliceInsertCue =  "/DAvAAAAAAAAAP///wViAAWKf+//CXVCAv4AUmXAAzUAAAAKAAhDVUVJADgyMWLvc/g="
     let secondSpliceInsertCue = "/DAvAAAAAAAA///wFAVIAACPf+/+c2nALv4AUsz1AAAAAAAKAAhDVUVJAAABNWLbowo="
-    let invalidInsertCue = "/DAvAAAAAAAAAP///wViAAWKf+9/CXVCAv4AUmXAAzUAAAAKAAhDVUVJADgyMWLvc/g="
+    let invalidInsertCue = "/DA1AAAAAAAAAP/wEBRiAAWKf+9/f3VCAv4AUmXAABQACAAKAAhDVUVJAAgACENVRUkAOLssdEQ="
 
     let timeSignalCue = "/DBLAAAAAAAA///wBQb+AAAAAAA1AjNDVUVJYgAFin//AABSZcAJH1NJR05BTDpEUjIxWjA3WlQ4YThhc25pdVVoZWlBPT00AADz3GdX"
     let secondTimeSignalCue = "/DBhAAAAAAAA///wBQb+qM1E7QBLAhdDVUVJSAAArX+fCAgAAAAALLLXnTUCAAIXQ1VFSUgAACZ/nwgIAAAAACyy150RAAACF0NVRUlIAAAnf58ICAAAAAAsstezEAAAihiGnw=="
     let thirdTimeSignalCue = "/DB5AAAAAAAAAP/wBQb/DkfmpABjAhdDVUVJhPHPYH+/CAgAAAAABy4QajEBGAIcQ1VFSYTx71B//wAAK3NwCAgAAAAABy1cxzACGAIqQ1VFSYTx751/vwwbUlRMTjFIAQAAAAAxMzU2MTY2MjQ1NTUxQjEAAQAALL95dg=="
     let fourthTimeSignalCue = "/DA9AAAAAAAAAACABQb+0fha8wAnAiVDVUVJSAAAv3/PAAD4+mMNEQ4FTEEzMDkICAAAAAAuU4SBNAAAPIaCPw=="
-
 
     let converter = SCTE35Converter()
 
@@ -50,11 +49,11 @@ class SpliceCommandTests: XCTestCase {
     func testInvalidInsertCue() {
         do {
             let _ = try converter.parseFrom(base64String: invalidInsertCue)
-            XCTAssert(false)
-        } catch SCTE35ParsingError.unableToCreateSpliceCommand(type: let type) {
-            XCTAssertEqual(type, CommandType.insert)
+            XCTFail("Unexpectedly succeeded in parsing invalid cue")
+        } catch SCTE35ParsingError.unableToParseDescriptor(let theType) {
+            XCTAssertEqual(theType, DescriptorType.avail)
         } catch {
-            XCTAssert(false)
+            XCTFail("Unexpected error thrown from parseFrom: \(error)")
         }
     }
 

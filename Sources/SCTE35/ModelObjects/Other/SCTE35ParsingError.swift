@@ -20,6 +20,8 @@ public enum SCTE35ParsingError: Error {
     case unableToCreateSpliceCommand(type: CommandType)
     case unableToParseDescriptor(type: DescriptorType)
     case invalidHexString
+    case invalidStringAsUtf8
+    case couldNotDecodeBitsToExpectedType
 }
 
 public enum CommandType {

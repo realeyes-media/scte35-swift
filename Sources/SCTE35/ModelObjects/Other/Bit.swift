@@ -22,6 +22,14 @@ enum Bit: Int, CustomStringConvertible {
     }
 }
 
-extension Bit: Equatable {
-    
+extension Bit: Equatable {}
+
+typealias BitCodable = BitEncodable & BitDecodable
+
+protocol BitDecodable {
+    init?(from bits: [Bit])
+}
+
+protocol BitEncodable {
+    func encode() throws -> [Bit]
 }
